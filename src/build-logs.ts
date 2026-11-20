@@ -11,7 +11,7 @@ export const BUILD_LOGS: BuildLog[] = [
   {
     id: 'booking-app',
     name: 'Booking + payments app',
-    goal: 'A working, good-looking demo product: a Telegram Mini App where a customer of a salon, clinic or tutor picks a service and a slot, "pays" (test mode) and gets a reminder. An admin view lists the bookings. It must run locally with one command and as a static web build, so it also works in a browser outside Telegram, using mock launch data.',
+    goal: 'A working, good-looking demo product: a mobile booking web app, which also opens inside Telegram as a Mini App, where a customer of a salon, clinic or tutor picks a service and a slot, "pays" (test mode) and gets a reminder. An admin view lists the bookings. It must run locally with one command and as a static web build, so it works in any phone browser and, with mock launch data, outside Telegram too.',
     steps: [
       'Vite + React + TypeScript + Tailwind and the official Telegram Mini Apps SDK. In-memory / localStorage backend, seeded services and slots, no paid services.',
       'Screens: services → slot picker → confirm + test payment → success; "My bookings"; an /admin bookings table. English copy, mobile-first, Telegram theme variables.',
