@@ -1,0 +1,54 @@
+---
+import { DEMOS, NEXT_DEMO } from '../config';
+import Section from './Section.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<Section id="work" eyebrow="Work" title="Built by us, so you can click it before you buy.">
+  <div class="space-y-5">
+    {
+      DEMOS.map((demo) => (
+        <article class="grid gap-10 overflow-hidden rounded-2xl border border-line bg-panel p-7 lg:grid-cols-2 lg:p-10">
+          <div>
+            <p class="inline-block rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+              Own product · demo
+            </p>
+            <h3 class="mt-4 font-display text-2xl font-semibold tracking-tight sm:text-3xl">{demo.name}</h3>
+            <p class="mt-4 text-muted">{demo.summary}</p>
+            <ul class="mt-6 space-y-2 text-sm text-white/85">
+              {demo.points.map((point) => (
+                <li class="flex gap-3">
+                  <span class="text-accent" aria-hidden="true">
+                    ✓
+                  </span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            {demo.shots.map((shot) => (
+              <img
+                src={`${base}${shot.src}`}
+                alt={shot.alt}
+                width="390"
+                height="844"
+                loading="lazy"
+                decoding="async"
+                class="h-auto w-full rounded-xl border border-line"
+              />
+            ))}
+          </div>
+        </article>
+      ))
+    }
+    <article class="rounded-2xl border border-dashed border-line p-7 lg:p-10">
+      <p class="inline-block rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
+        Own product · demo · in progress
+      </p>
+      <h3 class="mt-4 font-display text-2xl font-semibold tracking-tight">{NEXT_DEMO.name}</h3>
+      <p class="mt-3 max-w-2xl text-muted">{NEXT_DEMO.text}</p>
+    </article>
+  </div>
+</Section>

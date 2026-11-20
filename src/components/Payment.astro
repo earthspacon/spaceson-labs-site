@@ -1,0 +1,18 @@
+---
+import { PAYMENT_METHODS } from '../config';
+import Section from './Section.astro';
+---
+
+<Section id="payment" eyebrow="Payment" title="Pay the way your company already pays.">
+  <div class="grid gap-5 md:grid-cols-3">
+    {
+      PAYMENT_METHODS.map((method) => (
+        <div class="rounded-2xl border border-line p-7">
+          <h3 class="font-display text-xl font-semibold">{method.name}</h3>
+          <p class="mt-2 text-muted">{method.text}</p>
+        </div>
+      ))
+    }
+  </div>
+  <p class="mt-8 text-muted">50% upfront, the rest by milestones. Payment details come with each invoice.</p>
+</Section>

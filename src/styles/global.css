@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #08090c;
+  --color-panel: #101218;
+  --color-line: #1f232d;
+  --color-muted: #9aa1b2;
+  --color-accent: #c6f432;
+  --color-accent-ink: #0b0d05;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-ink);
+}

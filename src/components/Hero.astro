@@ -1,0 +1,45 @@
+---
+const FACTS = [
+  { value: '5–10 days', label: 'Telegram bot or Mini App' },
+  { value: '2–4 weeks', label: 'Web MVP, fixed price' },
+  { value: '1–2 weeks', label: 'Automations and AI agents' },
+];
+---
+
+<section id="top" class="relative overflow-hidden px-5 pt-20 pb-20 sm:px-8 lg:pt-32 lg:pb-28">
+  <div
+    class="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[720px] max-w-full -translate-x-1/2 rounded-full bg-accent/15 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="relative mx-auto max-w-6xl">
+    <p class="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 text-xs text-muted sm:text-sm">
+      <span class="size-1.5 rounded-full bg-accent"></span>
+      Product studio · remote from Tashkent, UTC+5
+    </p>
+    <h1 class="mt-6 max-w-4xl font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+      Your product, shipped in <span class="text-accent">weeks</span>, not quarters.
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-muted sm:text-xl">
+      We build MVPs, Telegram Mini Apps and automations for startups and small businesses. Fixed scope, fixed price, a
+      working demo every week.
+    </p>
+    <a
+      href="#contact"
+      class="mt-10 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 font-semibold text-accent-ink transition hover:brightness-110"
+    >
+      Get a fixed-price plan in 24 h
+      <span aria-hidden="true">→</span>
+    </a>
+    <dl class="mt-16 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+      {
+        FACTS.map((fact) => (
+          <div class="bg-ink px-6 py-5">
+            <dt class="text-sm text-muted">{fact.label}</dt>
+            <dd class="mt-1 font-display text-2xl font-semibold">{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
