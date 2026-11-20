@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#c6f432" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#c6f432" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10z" fill="#c6f432"/>
+    </marker>
+  </defs>
+  <rect width="800" height="600" fill="#0b0d12"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <g fill="#101218" stroke="#2a2f3b" stroke-width="2">
+    <rect x="50" y="210" width="190" height="130" rx="18"/>
+    <rect x="305" y="190" width="190" height="170" rx="18" stroke="#c6f432"/>
+    <rect x="560" y="210" width="190" height="130" rx="18"/>
+  </g>
+  <g stroke="#c6f432" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)">
+    <path d="M244 275h54"/>
+    <path d="M499 275h54"/>
+  </g>
+  <g fill="#ffffff" font-size="26" font-weight="600" text-anchor="middle">
+    <text x="145" y="270">Inbox + form</text>
+    <text x="400" y="262">AI agent</text>
+    <text x="655" y="270">CRM deal</text>
+  </g>
+  <g fill="#9aa1b2" font-size="18" text-anchor="middle">
+    <text x="145" y="302">new lead</text>
+    <text x="400" y="294">score · draft reply</text>
+    <text x="400" y="320">wait for your yes</text>
+    <text x="655" y="302">qualified, logged</text>
+  </g>
+  <rect x="270" y="440" width="260" height="48" rx="24" fill="#c6f432" fill-opacity=".12" stroke="#c6f432" stroke-opacity=".5"/>
+  <text x="400" y="471" fill="#c6f432" font-size="20" font-weight="600" text-anchor="middle">Demo coming this week</text>
+</svg>

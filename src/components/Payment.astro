@@ -1,9 +1,9 @@
 ---
-import { PAYMENT_METHODS } from '../config';
+import { HOURS, PAYMENT_METHODS } from '../config';
 import Section from './Section.astro';
 ---
 
-<Section id="payment" eyebrow="Payment" title="Pay the way your company already pays.">
+<Section id="payment" eyebrow="Payment & hours" title="Pay the way your company already pays.">
   <div class="grid gap-5 md:grid-cols-3">
     {
       PAYMENT_METHODS.map((method) => (
@@ -14,5 +14,9 @@ import Section from './Section.astro';
       ))
     }
   </div>
-  <p class="mt-8 text-muted">50% upfront, the rest by milestones. Payment details come with each invoice.</p>
+  <p class="mt-8 text-muted">Payment details come with each invoice.</p>
+  <div class="mt-12 rounded-2xl border border-line bg-panel p-7">
+    <h3 class="font-display text-xl font-semibold">{HOURS.title}</h3>
+    <p class="mt-2 max-w-3xl text-muted">{HOURS.text}</p>
+  </div>
 </Section>

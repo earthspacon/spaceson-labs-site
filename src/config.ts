@@ -3,56 +3,66 @@ export const CONTACT_EMAIL = 'CONTACT_EMAIL';
 
 export const STUDIO_NAME = 'Spaceson Labs';
 
+export const SITE_TITLE = `${STUDIO_NAME} — AI agents, automations and MVPs`;
+
 export const SITE_DESCRIPTION =
-  'Spaceson Labs builds MVPs, Telegram Mini Apps and automations for startups and small businesses. Fixed scope, fixed price, a working demo every week.';
+  'Spaceson Labs is an AI-native product studio: we ship AI agents, automations and MVPs in weeks, not quarters. Fixed scope, fixed price, a working demo every week.';
 
 export type Service = {
   name: string;
   price: string;
-  priceNote?: string;
+  priceNote: string;
   timeline: string;
+  summary: string;
   includes: string[];
 };
 
 export const SERVICES: Service[] = [
   {
-    name: 'Bot & Mini App Sprint',
-    price: 'from $1,500',
-    timeline: '5–10 days',
+    name: 'AI Agent & Automation',
+    price: 'from $2,500',
+    priceNote: 'setup + from $750/mo retainer',
+    timeline: 'Live in 1–2 weeks',
+    summary: 'An agent that does real work inside the tools your team already uses.',
     includes: [
-      'Telegram bot or Mini App',
-      'Payments via Telegram Stars or a provider',
-      'Admin panel and broadcasts',
-      'CRM or Google Sheets sync',
-      'Deployed and handed over',
+      'Lead qualification, support or document agent',
+      'Wired into email, your CRM, Slack or HubSpot',
+      'Built on n8n or in code, whichever fits',
+      'Monitoring and alerts when something breaks',
+      'Retainer: tuning, new workflows, fixes',
     ],
   },
   {
     name: 'MVP in 3 Weeks',
     price: 'from $6,000',
-    timeline: '2–4 weeks',
+    priceNote: 'fixed scope, fixed price',
+    timeline: '3 weeks',
+    summary: 'A product real users can sign up for and pay in, not a clickable mockup.',
     includes: [
-      'Web app on React / Next.js with a backend',
-      'Sign-in, payments, admin',
+      'Next.js / React web app',
+      'Sign-in and Stripe billing',
+      'Admin panel',
       'Landing page and analytics',
-      'Two rounds of changes included',
-      'Fixed price for the agreed scope',
+      'A working build to test every week',
     ],
   },
   {
-    name: 'Automation & AI Agent Setup',
-    price: 'from $2,000',
-    priceNote: 'support from $500/mo',
-    timeline: '1–2 weeks',
+    name: 'Product Engineering on Demand',
+    price: 'from $5,500/mo',
+    priceNote: 'monthly, scale up or down',
+    timeline: 'Start within a week',
+    summary: 'Senior frontend and full-stack capacity that plugs into your own team.',
     includes: [
-      'Process audit',
-      '2–4 workflows in n8n, Make or code',
-      'AI agent for support, leads or documents',
-      'Monitoring and alerts',
-      'Optional monthly support',
+      'Senior frontend / full-stack engineering',
+      'Works in your repo, tracker and standups',
+      'React, Next.js, TypeScript, Node',
+      'AI-assisted, so more ships per week',
+      'No hiring, no long contract',
     ],
   },
 ];
+
+export const SERVICES_ALSO = 'Also: Telegram bots & Mini Apps, Web3/TON.';
 
 export const STEPS = [
   {
@@ -61,58 +71,86 @@ export const STEPS = [
   },
   {
     title: 'A demo every week',
-    text: 'Every week you get a working build to click through, not a status report. Feedback goes into the next week.',
+    text: 'Every week you get a working build to click through, not a status report. Your feedback goes into the next week.',
   },
   {
     title: 'Fast delivery',
-    text: 'Senior engineering with AI agents doing research, boilerplate and QA. Bots ship in days, MVPs in weeks.',
+    text: 'AI agents handle research, boilerplate and tests. A senior engineer designs the system and reviews every line.',
   },
 ];
 
-export type Demo = {
-  name: string;
-  summary: string;
-  points: string[];
-  shots: { src: string; alt: string }[];
+export type Shot = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
 };
 
-export const DEMOS: Demo[] = [
+export type WorkCard = {
+  name: string;
+  label: string;
+  summary: string;
+  points: string[];
+  shots: Shot[];
+};
+
+export const WORK: WorkCard[] = [
   {
-    name: 'Slotly — Telegram Mini App for bookings',
+    name: 'AI Lead Agent',
+    label: 'Own product · demo · coming this week',
     summary:
-      'Booking and payment for a salon, clinic or tutor, inside Telegram. The customer picks a service and a time, pays and gets a reminder. The owner sees every booking in an admin view.',
+      'Reads every inbound email and form, scores the lead against your criteria, drafts a reply and puts the deal into your CRM. You approve, it sends.',
+    points: [
+      'Inbox and web form in, CRM deal out',
+      'Qualification rules you can read and change',
+      'Draft replies wait for a human yes',
+      'Every decision logged for review',
+    ],
+    shots: [
+      {
+        src: 'work/ai-lead-agent.svg',
+        alt: 'AI Lead Agent: placeholder, demo coming this week',
+        width: 800,
+        height: 600,
+      },
+    ],
+  },
+  {
+    name: 'Booking + payments app',
+    label: 'Own product · demo',
+    summary:
+      'A mobile web app for a salon, clinic or tutor. The customer picks a service and a time, pays and gets a reminder. The owner sees every booking and the revenue in an admin view. It runs in any mobile browser and can also open inside Telegram.',
     points: [
       'Slots follow working hours and never overlap',
-      'Test payments, reminders 2 h before the visit',
+      'Test card payments, reminder 2 h before the visit',
       'Admin view with bookings and revenue',
-      'Uses Telegram theme colors and user data',
+      'One codebase for the browser and Telegram',
     ],
     shots: [
       {
         src: 'work/slotly-slots.png',
-        alt: 'Slotly: picking a day and a time slot',
+        alt: 'Booking app: picking a day and a time slot',
+        width: 390,
+        height: 844,
       },
       {
         src: 'work/slotly-paid.png',
-        alt: 'Slotly: booking confirmed and paid',
+        alt: 'Booking app: booking confirmed and paid',
+        width: 390,
+        height: 844,
       },
     ],
   },
 ];
 
-export const NEXT_DEMO = {
-  name: 'SaaS starter',
-  text: 'Sign-in, test checkout, dashboard and roles: the base we start an MVP from.',
-};
-
 export const PAYMENT_METHODS = [
   {
-    name: 'Payoneer',
-    text: 'USD or EUR, paid by card or bank from your side.',
+    name: 'Payoneer invoice',
+    text: 'Pay by card or bank transfer in USD or EUR.',
   },
   {
-    name: 'Bank transfer',
-    text: 'SWIFT in USD or EUR against an invoice.',
+    name: 'SWIFT',
+    text: 'Direct bank transfer in USD or EUR against an invoice.',
   },
   {
     name: 'Crypto',
@@ -120,28 +158,34 @@ export const PAYMENT_METHODS = [
   },
 ];
 
+export const HOURS = {
+  title: 'Overlap with your working day',
+  text: 'We are on UTC+5 and plan our day around yours: EU business hours and the US morning are shared hours for calls and quick answers.',
+};
+
 export const FAQ = [
   {
     question: 'How do you set the price?',
     answer:
-      'By scope. You get a one-page plan with features, timeline and one fixed price before you pay anything. The prices above are where each package starts.',
+      'By scope. Before you pay anything you get a one-page plan with features, timeline and one fixed price. The prices above are where each package starts.',
   },
   {
     question: 'How does payment work?',
-    answer: '50% upfront, the rest split over milestones. Every payment gets an invoice.',
+    answer:
+      'Fixed-scope work: 50% upfront, the rest by milestones. Retainers and engineering capacity: monthly in advance. Every payment gets an invoice.',
   },
   {
-    question: 'What if the scope changes mid-project?',
+    question: 'Which AI models do you use, and where does our data go?',
     answer:
-      'New work goes into a separate milestone with its own fixed price. Nothing is added to the bill without your written yes.',
+      'We pick the model per task (OpenAI, Anthropic or open-source) and run it on your accounts and keys where possible, so your data stays under your contracts.',
   },
   {
     question: 'Who owns the code?',
-    answer: 'You do. The repository and all rights to the code move to you after the final payment.',
+    answer: 'You do. The repository, workflows and all rights move to you after the final payment.',
   },
   {
-    question: 'Where are you and how do we talk?',
+    question: 'What time zone are you in, and how do we talk?',
     answer:
-      'Tashkent, UTC+5. Day to day we write in Slack, Telegram or email, and meet on a call for each weekly demo.',
+      'UTC+5, overlapping EU business hours and the US morning. Day to day we write in Slack or email and meet on a video call for each weekly demo.',
   },
 ];

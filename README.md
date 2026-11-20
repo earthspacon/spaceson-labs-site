@@ -1,6 +1,6 @@
 # Spaceson Labs site
 
-One-page site for Spaceson Labs, a product studio that builds MVPs, Telegram Mini Apps and automations. Static Astro + Tailwind, no client-side JavaScript.
+One-page site for Spaceson Labs, an AI-native product studio that ships AI agents, automations and MVPs for US/UK/EU startups and SMBs. Static Astro + Tailwind, no client-side JavaScript.
 
 | Desktop | Mobile |
 |---|---|
