@@ -15,6 +15,7 @@ export type Service = {
   timeline: string;
   summary: string;
   includes: string[];
+  covers: string[];
 };
 
 export const SERVICES: Service[] = [
@@ -31,6 +32,13 @@ export const SERVICES: Service[] = [
       'Monitoring and alerts when something breaks',
       'Retainer: tuning, new workflows, fixes',
     ],
+    covers: [
+      'Discovery: a short audit of the process you want to automate',
+      'The build: 2–4 workflows plus the AI agent, wired into your tools',
+      'Monitoring and alerts set up',
+      '30 days of tuning after go-live',
+      'Retainer from $750/mo: monitoring, new workflows, fixes. Model usage billed at cost',
+    ],
   },
   {
     name: 'MVP in 3 Weeks',
@@ -45,6 +53,13 @@ export const SERVICES: Service[] = [
       'Landing page and analytics',
       'A working build to test every week',
     ],
+    covers: [
+      'A one-page plan with scope, timeline and one price before we start',
+      'Sign-in, billing, admin panel, landing page and analytics',
+      'A working build every week',
+      'Two rounds of changes',
+      'Code and IP handed over after final payment',
+    ],
   },
   {
     name: 'Product Engineering on Demand',
@@ -57,6 +72,12 @@ export const SERVICES: Service[] = [
       'Works in your repo, tracker and standups',
       'React, Next.js, TypeScript, Node',
       'AI-assisted, so more ships per week',
+      'No hiring, no long contract',
+    ],
+    covers: [
+      'A senior engineer\'s time, billed monthly',
+      'Planning, standups and code review with your team',
+      'Scale up or down month to month',
       'No hiring, no long contract',
     ],
   },
@@ -87,6 +108,7 @@ export type Shot = {
 };
 
 export type WorkCard = {
+  buildLogId: string;
   name: string;
   label: string;
   summary: string;
@@ -96,6 +118,7 @@ export type WorkCard = {
 
 export const WORK: WorkCard[] = [
   {
+    buildLogId: 'ai-lead-agent',
     name: 'AI Lead Agent',
     label: 'Own product · demo',
     summary:
@@ -116,6 +139,7 @@ export const WORK: WorkCard[] = [
     ],
   },
   {
+    buildLogId: 'booking-app',
     name: 'Booking + payments app',
     label: 'Own product · demo',
     summary:

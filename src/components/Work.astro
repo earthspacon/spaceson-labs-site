@@ -24,6 +24,12 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
                 </li>
               ))}
             </ul>
+            <a
+              href={`${base}how-we-built/#${card.buildLogId}`}
+              class="mt-7 inline-flex items-center gap-2 text-sm font-medium text-accent transition hover:text-white"
+            >
+              How it was built <span aria-hidden="true">→</span>
+            </a>
           </div>
           <div class="grid auto-cols-fr grid-flow-col items-start gap-4">
             {card.shots.map((shot) => (
