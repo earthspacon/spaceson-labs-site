@@ -97,7 +97,7 @@ export type WorkCard = {
 export const WORK: WorkCard[] = [
   {
     name: 'AI Lead Agent',
-    label: 'Own product · demo · coming this week',
+    label: 'Own product · demo',
     summary:
       'Reads every inbound email and form, scores the lead against your criteria, drafts a reply and puts the deal into your CRM. You approve, it sends.',
     points: [
@@ -108,10 +108,10 @@ export const WORK: WorkCard[] = [
     ],
     shots: [
       {
-        src: 'work/ai-lead-agent.svg',
-        alt: 'AI Lead Agent: placeholder, demo coming this week',
-        width: 800,
-        height: 600,
+        src: 'work/ai-lead-agent.png',
+        alt: 'AI Lead Agent: a scored lead with extracted budget and timeline next to an editable draft reply',
+        width: 1200,
+        height: 750,
       },
     ],
   },
