@@ -13,8 +13,8 @@ export const BUILD_LOGS: BuildLog[] = [
     name: 'Booking + payments app',
     goal: 'A working, good-looking demo product: a mobile booking web app, which also opens inside Telegram as a Mini App, where a customer of a salon, clinic or tutor picks a service and a slot, "pays" (test mode) and gets a reminder. An admin view lists the bookings. It must run locally with one command and as a static web build, so it works in any phone browser and, with mock launch data, outside Telegram too.',
     steps: [
-      'Vite + React + TypeScript + Tailwind and the official Telegram Mini Apps SDK. In-memory / localStorage backend, seeded services and slots, no paid services.',
-      'Screens: services → slot picker → confirm + test payment → success; "My bookings"; an /admin bookings table. English copy, mobile-first, Telegram theme variables.',
+      'Vite + React + TypeScript + Tailwind, a static web app for any phone browser. In-memory / localStorage backend, seeded services and slots, no paid services. The same build also runs inside Telegram through the official Mini Apps SDK.',
+      'Screens: services → slot picker → confirm + test payment → success; "My bookings"; an /admin bookings table. English copy, mobile-first, a light theme by default that follows the chat colors inside Telegram.',
       'Vitest tests for slot availability and booking logic. The production build must be green.',
       'README with what it is, a "Demo · own product · built in N h" label, run steps and two mobile screenshots (390 px wide).',
     ],
@@ -26,7 +26,7 @@ export const BUILD_LOGS: BuildLog[] = [
       '11 unit tests: working-hours fit, lead time, overlapping slots (and freed again after a cancel), double booking, a booking too soon, one past closing time, the reminder window, test cards.',
       'A browser run on the production build declined one test card, then approved a second one. Two bookings showed up in "My bookings" and in the admin table, and both survived a reload. 0 console errors.',
       'Built in about an hour of agent time, which is what the README label says. No real bug was recorded in this run.',
-      'Not deployed. Payments are test-only; real payments and a server-side check of the Telegram launch data are the next steps.',
+      'Not deployed. Payments are test-only; real payments are the next step, plus a server-side check of the launch data for the in-Telegram mode.',
     ],
   },
   {
