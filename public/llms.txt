@@ -8,7 +8,7 @@
 - MVP in 3 Weeks: from $6,000, fixed scope, fixed price. 3 weeks. A product people can sign up for and pay in, on phone and desktop. Includes: sign-in and card payments; admin panel, landing page, analytics; a working build every week; two rounds of changes; code and IP yours after final payment.
 - Product Engineering on Demand: from $5,500/mo, monthly, scale up or down. Start within a week. A senior frontend and full-stack engineer inside your own team. No hiring, no long contract.
 
-Also: Telegram bots & Mini Apps, Web3/TON.
+Also: Telegram bots and Mini Apps.
 
 ## Proof: products we run
 

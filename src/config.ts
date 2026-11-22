@@ -155,7 +155,7 @@ export const SERVICES: Service[] = [
   },
 ];
 
-export const SERVICES_ALSO = 'Also: Telegram bots & Mini Apps, Web3/TON.';
+export const SERVICES_ALSO = 'Also: Telegram bots and Mini Apps.';
 
 export const STEPS = [
   {
