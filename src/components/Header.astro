@@ -1,6 +1,7 @@
 ---
 import { CONTACT_EMAIL, STUDIO_NAME } from '../config';
 import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
@@ -22,11 +23,14 @@ const LINKS = [
     <nav class="hidden items-center gap-7 text-sm text-muted md:flex" aria-label="Main">
       {LINKS.map((link) => <a href={link.href} class="transition hover:text-ink">{link.label}</a>)}
     </nav>
-    <a
-      href={`mailto:${CONTACT_EMAIL}`}
-      class="rounded-md bg-ink px-3.5 py-1.5 text-sm font-semibold text-paper transition hover:bg-accent"
-    >
-      Email us
-    </a>
+    <div class="flex items-center gap-3">
+      <ThemeToggle />
+      <a
+        href={`mailto:${CONTACT_EMAIL}`}
+        class="rounded-md bg-ink px-3.5 py-1.5 text-sm font-semibold text-paper transition hover:bg-accent"
+      >
+        Email us
+      </a>
+    </div>
   </div>
 </header>
