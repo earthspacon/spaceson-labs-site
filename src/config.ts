@@ -34,7 +34,7 @@ export const PRODUCTS: Product[] = [
   {
     name: 'InboxSieve',
     job: 'Sorts the messages from a website contact form: removes spam, scores real client requests 0–100 and drafts a reply.',
-    price: 'Free plan · paid from $9/mo',
+    price: 'Free plan · paid from $5/mo',
     liveSince: '21 Nov 2026',
     url: 'https://inboxsieve.com/',
     host: 'inboxsieve.com',
@@ -48,7 +48,7 @@ export const PRODUCTS: Product[] = [
   {
     name: 'PriceDawn',
     job: "Checks competitors' prices once a day and sends a store owner one email at 7:00 with every change.",
-    price: 'From $19/mo',
+    price: 'From $9/mo',
     liveSince: '21 Nov 2026',
     url: 'https://pricedawn.spacesonlabs.com/',
     host: 'pricedawn.spacesonlabs.com',
@@ -62,7 +62,7 @@ export const PRODUCTS: Product[] = [
   {
     name: 'MonthMemo',
     job: "Writes each marketing agency client's monthly website report from their analytics. The agency approves, the client gets an email.",
-    price: 'From $29/mo · first month free',
+    price: 'From $9/mo · first month free',
     liveSince: '21 Nov 2026',
     url: 'https://monthmemo.spacesonlabs.com/',
     host: 'monthmemo.spacesonlabs.com',
@@ -76,6 +76,10 @@ export const PRODUCTS: Product[] = [
 ];
 
 export const LATELY = [
+  {
+    date: '2026-11-23',
+    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $2,000, $3,000 a month and $4,000.',
+  },
   {
     date: '2026-11-22',
     text: 'Monthly prices live on all three products: InboxSieve from $9, PriceDawn from $19, MonthMemo from $29.',
@@ -114,8 +118,8 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     name: 'AI Agent & Automation',
-    price: 'from $2,500',
-    priceNote: 'setup + from $750/mo retainer',
+    price: 'from $2,000',
+    priceNote: 'setup + from $400/mo retainer',
     timeline: 'Live in 1–2 weeks',
     summary: 'An agent that does a real job inside the tools your team already uses.',
     includes: [
@@ -128,7 +132,7 @@ export const SERVICES: Service[] = [
   },
   {
     name: 'MVP in 3 Weeks',
-    price: 'from $6,000',
+    price: 'from $4,000',
     priceNote: 'fixed scope, fixed price',
     timeline: '3 weeks',
     summary: 'A product people can sign up for and pay in, on phone and desktop.',
@@ -142,7 +146,7 @@ export const SERVICES: Service[] = [
   },
   {
     name: 'Product Engineering on Demand',
-    price: 'from $5,500/mo',
+    price: 'from $3,000/mo',
     priceNote: 'monthly, scale up or down',
     timeline: 'Start within a week',
     summary: 'A senior frontend and full-stack engineer inside your own team.',
