@@ -1,5 +1,5 @@
 // Replace before deploy. The address is the only contact on the site.
-export const CONTACT_EMAIL = 'CONTACT_EMAIL';
+export const CONTACT_EMAIL = 'hello@spacesonlabs.com';
 
 export const STUDIO_NAME = 'Spaceson Labs';
 
