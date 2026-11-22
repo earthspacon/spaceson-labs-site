@@ -2,56 +2,58 @@
   "target": "https://shiftboard-sample.spacesonlabs.com",
   "mode": "live",
   "name": "shiftboard-sample.spacesonlabs.com",
-  "ms": 9000,
+  "ms": 539,
   "commit": null,
-  "failed": 3,
+  "failed": 4,
   "total": 5,
-  "labels": ["Made in Lovable", "Takes payments"],
+  "labels": [
+    "Takes payments"
+  ],
   "info": null,
   "checks": [
     {
       "id": "U1",
       "status": "fail",
       "title": "Secret key in browser code",
-      "where": "assets/index-B7x2.js",
+      "where": "assets/index-BdKGPZwx.js (service_role)",
       "fix": "2 h",
-      "why": "A service key that skips every database rule is in the code every visitor downloads.",
+      "why": "A key that skips every database rule ships to every visitor. Anyone can open the browser tools and use it.",
       "tag": "week"
     },
     {
       "id": "U2",
       "status": "warn",
-      "title": "No error tracking",
+      "title": "Crashes go unseen",
       "where": null,
       "fix": "1 h",
       "why": "When a user hits a bug, nobody hears about it.",
-      "tag": "full"
+      "tag": "week"
     },
     {
       "id": "U3",
       "status": "warn",
       "title": "Source code public",
-      "where": "assets/index-B7x2.js.map",
+      "where": "assets/index-BdKGPZwx.js.map",
       "fix": "1 h",
-      "why": "Source maps are published, so anyone can download your full source.",
-      "tag": "full"
+      "why": "Anyone can download your full source code, comments included, and read how every part works.",
+      "tag": "week"
+    },
+    {
+      "id": "U5",
+      "status": "warn",
+      "title": "Some safety headers missing (low risk)",
+      "where": "missing: HSTS, CSP",
+      "fix": "1 h",
+      "why": "Browsers get fewer instructions to block injected scripts. Low risk on its own.",
+      "tag": "week"
     },
     {
       "id": "U4",
       "status": "pass",
-      "title": "No .env or .git exposed",
+      "title": "No settings or code history exposed",
       "where": null,
       "fix": null,
-      "why": "Both paths return the app page, not a file.",
-      "tag": null
-    },
-    {
-      "id": "U5",
-      "status": "pass",
-      "title": "HTTPS and HSTS on",
-      "where": null,
-      "fix": null,
-      "why": "A content security policy is missing. Low risk on its own.",
+      "why": null,
       "tag": null
     }
   ]

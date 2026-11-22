@@ -146,9 +146,12 @@
 
 .cc-where {
   font-size: 0.78rem;
-  overflow-wrap: anywhere;
   color: var(--ink);
   opacity: 0.8;
+}
+
+.cc-file {
+  white-space: nowrap;
 }
 
 .cc-chevron {

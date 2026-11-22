@@ -6,7 +6,7 @@
     "high": 3,
     "medium": 4,
     "fixed": 1,
-    "estimate": "6–8 days"
+    "estimate": "5–7 work days"
   },
   "findings": [
     {
@@ -36,7 +36,7 @@
     {
       "severity": "high",
       "see": "Any change can break sign-up unnoticed: no tests",
-      "where": "repo",
+      "where": "0 test files",
       "fix": "Tests for sign-up, shifts, payments",
       "estimate": "2 days",
       "isFixed": false
@@ -52,7 +52,7 @@
     {
       "severity": "medium",
       "see": "Broken code goes straight to users",
-      "where": "no checks before deploy",
+      "where": "no .github/workflows",
       "fix": "Tests on every push",
       "estimate": "1 h",
       "isFixed": false
@@ -68,7 +68,7 @@
     {
       "severity": "medium",
       "see": "Whole classes of crashes pass the compiler",
-      "where": "tsconfig.app.json",
+      "where": "tsconfig.app.json:12",
       "fix": "Turn on strictNullChecks, fix the errors",
       "estimate": "1–2 days",
       "isFixed": false
@@ -76,7 +76,7 @@
     {
       "severity": "medium",
       "see": "The full source can be downloaded",
-      "where": "public source maps",
+      "where": "assets/index-BdKGPZwx.js.map",
       "fix": "Turn them off in the build",
       "estimate": "0.5 h",
       "isFixed": false
@@ -85,29 +85,32 @@
   "firstFinding": "Table clients has no row-level security. Anyone with the public key, which every visitor's browser has, can run one query and get all 212 rows. Fix: enable row-level security, add an owner policy, add a test that a user from company B can't read company A's clients.",
   "pr": {
     "number": 1,
-    "title": "Lock down clients and shifts",
-    "added": 42,
-    "removed": 3,
-    "files": 2,
+    "title": "Lock down clients",
+    "added": 355,
+    "removed": 2,
+    "files": 4,
     "fixesCheck": "G4",
-    "diffFile": "supabase/migrations/0002_rls.sql",
+    "diffFile": "supabase/migrations/0004_lock_down_clients.sql",
     "diff": [
       "alter table clients enable row level security;",
       "create policy \"own company reads clients\" on clients",
-      "  for select using (company_id = auth_company_id());",
-      "alter table shifts enable row level security;",
-      "create policy \"own company reads shifts\" on shifts",
-      "  for select using (company_id = auth_company_id());"
+      "  for select to authenticated using (company_id = auth_company_id());",
+      "create policy \"owner removes clients\" on clients",
+      "  for delete to authenticated using (company_id = auth_company_id() and auth_is_owner());"
     ],
-    "testFile": "supabase/tests/rls.test.ts",
+    "testFile": "tests/rls.test.ts",
     "tests": [
-      "anonymous visitor gets 0 clients",
-      "user from company B can't read company A",
-      "owner reads their own clients",
-      "anonymous visitor can't add a client",
-      "user from company B can't edit company A's client",
-      "shifts follow the same rule"
+      "shows no clients to a visitor who is not signed in",
+      "hides company A clients from a user of company B",
+      "shows a user only the clients of their own company",
+      "does not let a user of company B rename company A clients",
+      "does not let a user of company B add a client to company A",
+      "does not let a user of company B delete company A clients"
     ],
-    "ci": { "passed": 6, "failed": 0, "seconds": 4.1 }
+    "ci": {
+      "passed": 6,
+      "failed": 0,
+      "seconds": 3.2
+    }
   }
 }

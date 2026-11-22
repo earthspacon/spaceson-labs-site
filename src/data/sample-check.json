@@ -2,12 +2,15 @@
   "target": "github.com/spacesonlabs/shiftboard-sample",
   "mode": "repo",
   "name": "shiftboard-sample",
-  "ms": 2800,
-  "commit": "4f1c2a9",
+  "ms": 3311,
+  "commit": "3057a93",
   "failed": 8,
   "total": 13,
-  "labels": ["Made in Lovable", "Takes payments"],
-  "info": { "authors": 1, "lastCommitDays": 3 },
+  "labels": [],
+  "info": {
+    "authors": 1,
+    "lastCommitDays": 0
+  },
   "checks": [
     {
       "id": "G4",
@@ -15,7 +18,7 @@
       "title": "Anyone can read table clients",
       "where": "supabase/migrations/0001_init.sql:14",
       "fix": "1 h",
-      "why": "The public key ships to every visitor's browser by design. With no row-level security on this table, one query with that key returns every client.",
+      "why": "The table has no row-level security. Anyone with the public key, which every visitor's browser has, can read every row with one request.",
       "tag": "week"
     },
     {
@@ -24,8 +27,8 @@
       "title": "Secret key in browser code",
       "where": "src/lib/admin.ts:3",
       "fix": "2 h",
-      "why": "A service key skips every database rule, and this one is bundled into the code every visitor downloads.",
-      "tag": "full"
+      "why": "A service_role key ships to every visitor. It skips every database rule, so anyone can read or change all data.",
+      "tag": "week"
     },
     {
       "id": "G8",
@@ -33,35 +36,35 @@
       "title": "Payment code has no test",
       "where": "supabase/functions/stripe-webhook/",
       "fix": "3 h",
-      "why": "Checkout and the payment webhook change with every prompt, and nothing checks that a failed payment stays failed.",
-      "tag": "full"
+      "why": "Nothing checks the code that takes money. A small change can charge people twice or unlock paid features for free.",
+      "tag": "week"
     },
     {
       "id": "G1",
       "status": "fail",
       "title": "No tests",
-      "where": null,
+      "where": "0 test files, no test script",
       "fix": "days",
-      "why": "There are no test files and no test script. A change can break sign-up and nobody notices until a user does.",
+      "why": "A change can break sign-up or payments and nobody notices until a user does.",
       "tag": "full"
     },
     {
       "id": "G3",
       "status": "fail",
       "title": "Crashes go unseen",
-      "where": null,
+      "where": "no error tracking",
       "fix": "1 h",
-      "why": "No error tracking is installed. When the app crashes for a user, you hear about it from the user, if at all.",
-      "tag": "full"
+      "why": "If the app crashes for a user, you won't hear about it.",
+      "tag": "week"
     },
     {
       "id": "G2",
       "status": "fail",
       "title": "Nothing runs before deploy",
-      "where": null,
+      "where": "no .github/workflows",
       "fix": "1 h",
-      "why": "There is no workflow that runs checks on a change, so a broken change goes straight to users.",
-      "tag": "full"
+      "why": "Nothing checks a change before it goes live.",
+      "tag": "week"
     },
     {
       "id": "G12",
@@ -69,34 +72,34 @@
       "title": "File too big to change safely",
       "where": "src/pages/Dashboard.tsx",
       "fix": "days",
-      "why": "This page is 1,240 lines and holds half the app. Every edit there risks breaking something unrelated.",
+      "why": "Dashboard.tsx is 1,324 lines; every edit there can break something unrelated.",
       "tag": "full"
     },
     {
       "id": "G13",
       "status": "fail",
-      "title": "Strict type checks off",
-      "where": "tsconfig.app.json",
+      "title": "Type checks off",
+      "where": "tsconfig.app.json:12",
       "fix": "days",
-      "why": "strictNullChecks is false, so the compiler lets a whole class of crashes through to users.",
+      "why": "The compiler lets whole classes of crashes through, like using a value that may be missing.",
       "tag": "full"
     },
     {
       "id": "G5",
       "status": "pass",
-      "title": "No open write policies",
+      "title": "No open write rules",
       "where": null,
       "fix": null,
-      "why": "No policy lets an anonymous visitor change rows.",
+      "why": null,
       "tag": null
     },
     {
       "id": "G7",
       "status": "pass",
-      "title": "No secrets in .env",
+      "title": "No secrets in committed settings",
       "where": null,
       "fix": null,
-      "why": "Only the public Supabase URL and key are committed. Those are meant to be public.",
+      "why": "Only the public database address and key, which are meant to be public.",
       "tag": null
     },
     {
@@ -105,25 +108,25 @@
       "title": "No known-vulnerable packages",
       "where": null,
       "fix": null,
-      "why": "None of the installed packages has a published security bug.",
+      "why": "88 packages checked.",
       "tag": null
     },
     {
       "id": "G11",
       "status": "pass",
-      "title": "Dependencies within one major version",
+      "title": "Dependencies within 1 major",
       "where": null,
       "fix": null,
-      "why": "Every main dependency is at most one major version behind.",
+      "why": null,
       "tag": null
     },
     {
       "id": "G9",
       "status": "pass",
       "title": "Schema in the repo",
-      "where": "supabase/migrations/",
+      "where": null,
       "fix": null,
-      "why": "The database can be rebuilt from the migrations in the repo.",
+      "why": "3 migrations.",
       "tag": null
     }
   ]

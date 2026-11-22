@@ -1,6 +1,7 @@
 import {
   CHECK_ERRORS,
   type CheckErrorCode,
+  FAILED_LABEL,
   type CheckResult,
   detectTarget,
   icon,
@@ -113,7 +114,7 @@ function renderResultFooter({ result }: { result: CheckResult }) {
   });
   const subject = `App check: ${result.name}`;
   const body = [
-    `${result.failed} of ${result.total} checks fail.`,
+    `${result.failed} of ${result.total} ${FAILED_LABEL}.`,
     top ? `Top problem: ${top.title}${top.where ? ` (${top.where})` : ''}.` : '',
     `Full result: ${shareUrl}`,
   ]

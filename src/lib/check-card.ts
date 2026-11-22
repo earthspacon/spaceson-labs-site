@@ -8,7 +8,7 @@ export type CheckRow = {
   title: string;
   where: string | null;
   fix: string | null;
-  why: string;
+  why: string | null;
   tag: 'week' | 'full' | null;
 };
 
@@ -65,6 +65,9 @@ export const ICONS = {
   chevron: '<path d="m6 9 6 6 6-6"/>',
 } as const;
 
+// "failed" counts every row that is not a pass (fail + warn).
+export const FAILED_LABEL = 'need work';
+
 const STATUS_LABEL: Record<CheckStatus, string> = {
   fail: 'Fails',
   warn: 'Worth fixing',
@@ -101,13 +104,23 @@ export function detectTarget(raw: string): CheckTarget {
   }
 }
 
-export function renderCheckCard({ result, limit, isAnimated = false }: { result: CheckResult; limit?: number; isAnimated?: boolean }) {
+// `isSample` is for cards baked into the page: no relative time, so they do not age.
+export function renderCheckCard({
+  result,
+  limit,
+  isAnimated = false,
+  isSample = false,
+}: {
+  result: CheckResult;
+  limit?: number;
+  isAnimated?: boolean;
+  isSample?: boolean;
+}) {
   const rows = limit ? result.checks.slice(0, limit) : result.checks;
   const hidden = result.checks.length - rows.length;
-  const seconds = (result.ms / 1000).toFixed(1).replace(/\.0$/, '');
   const meta = [
     `<span>${result.mode === 'repo' ? 'Code check' : 'Live site check'}</span>`,
-    `<span>checked in ${seconds} s</span>`,
+    `<span>${buildDuration({ ms: result.ms, isSample })}</span>`,
     result.commit ? `<span>commit <code>${escapeHtml(result.commit)}</code></span>` : '',
   ].join('');
   const labels = result.labels.map((label) => `<li>${escapeHtml(label)}</li>`).join('');
@@ -118,12 +131,12 @@ export function renderCheckCard({ result, limit, isAnimated = false }: { result:
       <p class="cc-name">${escapeHtml(result.name)}</p>
       <p class="cc-meta">${meta}</p>
     </div>
-    <p class="cc-score"><strong>${result.failed} of ${result.total}</strong> checks fail</p>
+    <p class="cc-score"><strong>${result.failed} of ${result.total}</strong> ${FAILED_LABEL}</p>
     ${labels ? `<ul class="cc-labels">${labels}</ul>` : ''}
   </header>
   <ol class="cc-rows">${rows.map((row, index) => renderRow({ row, index })).join('')}</ol>
   ${hidden > 0 ? `<p class="cc-more">${hidden} more checks in the full result</p>` : ''}
-  ${result.info ? `<p class="cc-info">${renderInfo(result.info)}</p>` : ''}
+  ${result.info ? `<p class="cc-info">${renderInfo({ info: result.info, isSample })}</p>` : ''}
 </article>`;
 }
 
@@ -135,8 +148,24 @@ export function renderCheckError({ code }: { code: CheckErrorCode }) {
 </div>`;
 }
 
+// Breaks only after a "/": each folder and the "file:line" stay whole, so the line never drops alone.
+export function renderWhere(where: string) {
+  const space = where.indexOf(' ');
+  const path = space === -1 ? where : where.slice(0, space);
+  const rest = space === -1 ? '' : where.slice(space);
+  const parts = path.split(/(?<=\/)/);
+
+  const html = parts
+    .map((part) => {
+      return `<span class="cc-file">${escapeHtml(part)}</span>`;
+    })
+    .join('<wbr>');
+
+  return `${html}${escapeHtml(rest)}`;
+}
+
 function renderRow({ row, index }: { row: CheckRow; index: number }) {
-  const where = row.where ? `<code class="cc-where">${escapeHtml(row.where)}</code>` : '';
+  const where = row.where ? `<code class="cc-where">${renderWhere(row.where)}</code>` : '';
   const fix = row.fix ? `<span class="cc-fix">fix: ${escapeHtml(row.fix)}</span>` : '';
   const tag = row.tag ? `<span class="cc-tag">${TAG_LABEL[row.tag]}</span>` : '';
 
@@ -150,13 +179,23 @@ function renderRow({ row, index }: { row: CheckRow; index: number }) {
       </span>
       <span class="cc-chevron">${icon('chevron')}</span>
     </summary>
-    <div class="cc-why"><p>${escapeHtml(row.why)}</p>${tag}</div>
+    ${row.why || tag ? `<div class="cc-why">${row.why ? `<p>${escapeHtml(row.why)}</p>` : ''}${tag}</div>` : ''}
   </details>
 </li>`;
 }
 
-function renderInfo(info: NonNullable<CheckResult['info']>) {
+function buildDuration({ ms, isSample }: { ms: number; isSample: boolean }) {
+  if (isSample) {
+    return `checked in about ${Math.max(1, Math.round(ms / 1000))} s`;
+  }
+  return `checked in ${(ms / 1000).toFixed(1).replace(/\.0$/, '')} s`;
+}
+
+function renderInfo({ info, isSample }: { info: NonNullable<CheckResult['info']>; isSample: boolean }) {
   const authors = info.authors === 1 ? '1 person commits here' : `${info.authors} people commit here`;
+  if (isSample) {
+    return authors;
+  }
   return `${authors}, last commit ${buildDaysAgo(info.lastCommitDays)}`;
 }
 
