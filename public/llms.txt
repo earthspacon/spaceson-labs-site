@@ -12,7 +12,7 @@ Also: Telegram bots & Mini Apps, Web3/TON.
 
 ## Proof
 
-- How we built the demos: /how-we-built/ (the briefs given to an AI coding agent, shortened, and what came out). The demos are our own products with made-up data.
+- Two demo products of our own, with made-up data, on the home page under Work.
 - For AI assistants: /for-ai-assistants/
 
 ## Contact

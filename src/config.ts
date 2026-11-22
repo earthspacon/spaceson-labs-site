@@ -28,7 +28,6 @@ export const SERVICES: Service[] = [
     includes: [
       'Lead qualification, support or document agent',
       'Wired into email, your CRM, Slack or HubSpot',
-      'Built on n8n or in code, whichever fits',
       'Monitoring and alerts when something breaks',
       'Retainer: tuning, new workflows, fixes',
     ],
@@ -47,8 +46,8 @@ export const SERVICES: Service[] = [
     timeline: '3 weeks',
     summary: 'A product real users can sign up for and pay in, not a clickable mockup.',
     includes: [
-      'Next.js / React web app',
-      'Sign-in and Stripe billing',
+      'A web app that works on phone and desktop',
+      'Sign-in and card payments',
       'Admin panel',
       'Landing page and analytics',
       'A working build to test every week',
@@ -70,7 +69,6 @@ export const SERVICES: Service[] = [
     includes: [
       'Senior frontend / full-stack engineering',
       'Works in your repo, tracker and standups',
-      'React, Next.js, TypeScript, Node',
       'AI-assisted, so more ships per week',
       'No hiring, no long contract',
     ],
@@ -108,7 +106,6 @@ export type Shot = {
 };
 
 export type WorkCard = {
-  buildLogId: string;
   name: string;
   label: string;
   summary: string;
@@ -118,7 +115,6 @@ export type WorkCard = {
 
 export const WORK: WorkCard[] = [
   {
-    buildLogId: 'ai-lead-agent',
     name: 'AI Lead Agent',
     label: 'Own product · demo',
     summary:
@@ -139,7 +135,6 @@ export const WORK: WorkCard[] = [
     ],
   },
   {
-    buildLogId: 'booking-app',
     name: 'Booking + payments app',
     label: 'Own product · demo',
     summary:
@@ -201,7 +196,7 @@ export const FAQ = [
   {
     question: 'Which AI models do you use, and where does our data go?',
     answer:
-      'We pick the model per task (OpenAI, Anthropic or open-source) and run it on your accounts and keys where possible, so your data stays under your contracts.',
+      'We pick the model per task and run it on your accounts and keys where possible, so your data stays under your contracts.',
   },
   {
     question: 'Who owns the code?',
