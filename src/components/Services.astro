@@ -3,42 +3,27 @@ import { SERVICES, SERVICES_ALSO } from '../config';
 import Section from './Section.astro';
 ---
 
-<Section id="services" eyebrow="Services" title="Three ways to work with us. A clear price for each.">
+<Section id="services" title="Work with us" intro="Three packages. The price is where each one starts.">
   <div class="grid gap-5 lg:grid-cols-3">
     {
       SERVICES.map((service) => (
-        <article class="flex flex-col rounded-2xl border border-line bg-panel p-7 transition hover:border-accent/50">
+        <article class="flex flex-col rounded-lg border border-line p-6">
           <p class="text-sm text-muted">{service.timeline}</p>
-          <h3 class="mt-2 font-display text-2xl font-semibold tracking-tight">{service.name}</h3>
-          <p class="mt-3 text-muted">{service.summary}</p>
-          <p class="mt-6 font-display text-3xl font-semibold text-accent">{service.price}</p>
+          <h3 class="mt-1 text-xl font-semibold tracking-tight">{service.name}</h3>
+          <p class="mt-2 text-muted">{service.summary}</p>
+          <p class="mt-5 text-3xl font-semibold tracking-tight">{service.price}</p>
           <p class="mt-1 text-sm text-muted">{service.priceNote}</p>
-          <ul class="mt-6 space-y-3 border-t border-line pt-6 text-sm text-white/85">
+          <ul class="mt-5 space-y-2 border-t border-line pt-5 text-sm">
             {service.includes.map((item) => (
               <li class="flex gap-3">
-                <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                <span class="mt-2 size-1 shrink-0 bg-accent" aria-hidden="true" />
                 {item}
               </li>
             ))}
           </ul>
-          <div class="mt-auto pt-6">
-            <div class="rounded-xl border border-line bg-ink/60 p-4">
-              <p class="text-xs font-medium tracking-widest text-muted uppercase">What the price covers</p>
-              <ul class="mt-3 space-y-2 text-xs text-muted">
-                {service.covers.map((item) => (
-                  <li class="flex gap-2">
-                    <span class="text-accent" aria-hidden="true">
-                      +
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </article>
       ))
     }
   </div>
-  <p class="mt-8 text-sm text-muted">{SERVICES_ALSO}</p>
+  <p class="mt-6 text-sm text-muted">{SERVICES_ALSO}</p>
 </Section>

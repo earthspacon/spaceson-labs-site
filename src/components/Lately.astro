@@ -1,0 +1,19 @@
+---
+import { LATELY } from '../config';
+import Section from './Section.astro';
+---
+
+<Section id="lately" title="Lately" intro="What we shipped, newest first.">
+  <ol class="divide-y divide-line border-y border-line">
+    {
+      LATELY.map((entry) => (
+        <li class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+          <time datetime={entry.date} class="font-mono text-sm text-muted sm:pt-0.5">
+            {entry.date}
+          </time>
+          <p>{entry.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

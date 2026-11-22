@@ -16,7 +16,7 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#08090c" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32.png`} />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
@@ -28,7 +28,7 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
-  <body class="font-sans text-white antialiased">
+  <body class="bg-paper font-sans text-ink antialiased">
     <slot />
   </body>
 </html>

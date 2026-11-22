@@ -1,0 +1,45 @@
+---
+import { PRODUCTS } from '../config';
+import Section from './Section.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<Section id="products" title="Products we run" intro="Built, priced and run by us. Open any of them and try it.">
+  <div class="grid gap-5 md:grid-cols-3">
+    {
+      PRODUCTS.map((product) => (
+        <a
+          href={product.url}
+          class="group flex flex-col overflow-hidden rounded-lg border border-line transition hover:border-ink"
+        >
+          <div class="flex flex-1 flex-col p-5">
+            <h3 class="text-lg font-semibold">{product.name}</h3>
+            <span class="text-sm break-all text-accent group-hover:underline">{product.host} ↗</span>
+            <p class="mt-2 text-sm text-muted">{product.job}</p>
+            <dl class="mt-auto grid gap-1 pt-4 text-sm">
+              <div class="flex justify-between gap-4">
+                <dt class="text-muted">Price</dt>
+                <dd class="text-right font-semibold">{product.price}</dd>
+              </div>
+              <div class="flex justify-between gap-4">
+                <dt class="text-muted">Live since</dt>
+                <dd class="text-right font-mono">{product.liveSince}</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="aspect-[16/11] border-t border-line bg-panel p-3">
+            <img
+              src={`${base}${product.shot.src}`}
+              alt={product.shot.alt}
+              width={product.shot.width}
+              height={product.shot.height}
+              decoding="async"
+              class="h-full w-full object-contain object-top"
+            />
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</Section>

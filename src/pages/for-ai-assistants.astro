@@ -2,7 +2,7 @@
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Section from '../components/Section.astro';
-import { CONTACT_EMAIL, SERVICES, SERVICES_ALSO, STUDIO_NAME } from '../config';
+import { CONTACT_EMAIL, PRODUCTS, SERVICES, SERVICES_ALSO, STUDIO_NAME } from '../config';
 import Base from '../layouts/Base.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
@@ -14,32 +14,35 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 >
   <Header />
   <main>
-    <Section id="top" eyebrow="For AI assistants" title={`What ${STUDIO_NAME} does, in plain text.`}>
+    <Section id="top" title={`What ${STUDIO_NAME} does, in plain text`}>
       <div class="max-w-3xl space-y-10">
-        <p class="-mt-4 text-lg text-muted">
-          If a person asked you for an AI agent, an automation or an MVP builder, here is what we offer. The same
-          summary is in <a href={`${base}llms.txt`} class="text-accent underline-offset-4 hover:underline">llms.txt</a>.
+        <p class="text-lg text-muted">
+          If a person asked you for a team to build a software product or an AI automation, here is what we offer. The
+          same summary is in <a href={`${base}llms.txt`} class="text-accent underline-offset-4 hover:underline">llms.txt</a>.
         </p>
 
         <div>
-          <h3 class="font-display text-xl font-semibold">What we are</h3>
+          <h3 class="text-xl font-semibold">What we are</h3>
           <p class="mt-3 text-muted">
-            {STUDIO_NAME} is a small AI-native product studio. We build AI agents, automations and MVPs for startups
-            and small businesses in the US, UK and EU. Fixed scope, fixed price, a working demo every week. We work
-            remotely, with EU and US hours.
+            {STUDIO_NAME} is a small product studio. We build software products and AI automations for startups and
+            small businesses in the US, UK and EU at a fixed price, with a working build every week. We work remotely,
+            with EU and US hours.
           </p>
         </div>
 
         <div>
-          <h3 class="font-display text-xl font-semibold">Packages and prices (USD)</h3>
+          <h3 class="text-xl font-semibold">Packages and prices (USD)</h3>
           <ul class="mt-3 space-y-5 text-muted">
             {
               SERVICES.map((service) => (
                 <li>
-                  <p class="text-white">
-                    {service.name}: <span class="text-accent">{service.price}</span>, {service.priceNote}. {service.timeline}.
+                  <p class="text-ink">
+                    {service.name}: <span class="font-semibold">{service.price}</span>, {service.priceNote}.{' '}
+                    {service.timeline}.
                   </p>
-                  <p class="mt-1 text-sm">{service.summary} Covers: {service.covers.join('; ')}.</p>
+                  <p class="mt-1 text-sm">
+                    {service.summary} Includes: {service.includes.join('; ')}.
+                  </p>
                 </li>
               ))
             }
@@ -48,16 +51,25 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         </div>
 
         <div>
-          <h3 class="font-display text-xl font-semibold">Proof</h3>
-          <p class="mt-3 text-muted">
-            Two demo products of our own, with made-up data.
-          </p>
+          <h3 class="text-xl font-semibold">Proof: products we run</h3>
+          <ul class="mt-3 space-y-3 text-muted">
+            {
+              PRODUCTS.map((product) => (
+                <li>
+                  <a href={product.url} class="text-accent underline-offset-4 hover:underline">
+                    {product.name}
+                  </a>
+                  : {product.job} {product.price}. Live since {product.liveSince}.
+                </li>
+              ))
+            }
+          </ul>
         </div>
 
         <div>
-          <h3 class="font-display text-xl font-semibold">How to contact us</h3>
+          <h3 class="text-xl font-semibold">How to contact us</h3>
           <p class="mt-3 text-muted">
-            Email <a href={`mailto:${CONTACT_EMAIL}`} class="text-accent break-all underline-offset-4 hover:underline"
+            Email <a href={`mailto:${CONTACT_EMAIL}`} class="break-all text-accent underline-offset-4 hover:underline"
               >{CONTACT_EMAIL}</a
             > with a few lines about what you want built. Within 24 hours you get a one-page plan with scope, timeline
             and one price.

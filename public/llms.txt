@@ -1,19 +1,20 @@
 # Spaceson Labs
 
-> Spaceson Labs is an AI-native product studio. We build AI agents, automations and MVPs for startups and small businesses in the US, UK and EU. Fixed scope, fixed price, a working demo every week. Remote, EU and US hours.
+> Spaceson Labs is a small product studio. We build software products and AI automations for startups and small businesses in the US, UK and EU at a fixed price, with a working build every week, and run three paid products of our own. Remote, EU and US hours.
 
 ## Packages and prices (USD)
 
-- AI Agent & Automation: from $2,500, setup + from $750/mo retainer. Live in 1–2 weeks. An agent that does real work inside the tools your team already uses. Covers: Discovery: a short audit of the process you want to automate; The build: 2–4 workflows plus the AI agent, wired into your tools; Monitoring and alerts set up; 30 days of tuning after go-live; Retainer from $750/mo: monitoring, new workflows, fixes. Model usage billed at cost.
-- MVP in 3 Weeks: from $6,000, fixed scope, fixed price. 3 weeks. A product real users can sign up for and pay in, not a clickable mockup. Covers: A one-page plan with scope, timeline and one price before we start; Sign-in, billing, admin panel, landing page and analytics; A working build every week; Two rounds of changes; Code and IP handed over after final payment.
-- Product Engineering on Demand: from $5,500/mo, monthly, scale up or down. Start within a week. Senior frontend and full-stack capacity that plugs into your own team. Covers: A senior engineer's time, billed monthly; Planning, standups and code review with your team; Scale up or down month to month; No hiring, no long contract.
+- AI Agent & Automation: from $2,500, setup + from $750/mo retainer. Live in 1–2 weeks. An agent that does a real job inside the tools your team already uses. Includes: short audit of the process first; 2–4 workflows plus the agent, connected to your email and CRM; alerts when something breaks; 30 days of tuning after go-live; retainer for new workflows and fixes, usage billed at cost.
+- MVP in 3 Weeks: from $6,000, fixed scope, fixed price. 3 weeks. A product people can sign up for and pay in, on phone and desktop. Includes: sign-in and card payments; admin panel, landing page, analytics; a working build every week; two rounds of changes; code and IP yours after final payment.
+- Product Engineering on Demand: from $5,500/mo, monthly, scale up or down. Start within a week. A senior frontend and full-stack engineer inside your own team. No hiring, no long contract.
 
 Also: Telegram bots & Mini Apps, Web3/TON.
 
-## Proof
+## Proof: products we run
 
-- Two demo products of our own, with made-up data, on the home page under Work.
-- For AI assistants: /for-ai-assistants/
+- InboxSieve (https://inboxsieve.com/): sorts website contact-form messages, removes spam, scores real client requests 0–100 and drafts a reply. Free plan, paid from $9/mo. Live since 21 Nov 2026.
+- PriceDawn (https://pricedawn.spacesonlabs.com/): checks competitors' prices once a day and sends one email at 7:00 with every change. From $19/mo. Live since 21 Nov 2026.
+- MonthMemo (https://monthmemo.spacesonlabs.com/): writes each marketing agency client's monthly website report; the agency approves before it is sent. From $29/mo, first month free. Live since 21 Nov 2026.
 
 ## Contact
 

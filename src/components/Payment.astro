@@ -3,20 +3,19 @@ import { HOURS, PAYMENT_METHODS } from '../config';
 import Section from './Section.astro';
 ---
 
-<Section id="payment" eyebrow="Payment & hours" title="Pay the way your company already pays.">
-  <div class="grid gap-5 md:grid-cols-3">
+<Section id="payment" title="Payment and hours" intro="Payment details come with each invoice.">
+  <div class="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
     {
       PAYMENT_METHODS.map((method) => (
-        <div class="rounded-2xl border border-line p-7">
-          <h3 class="font-display text-xl font-semibold">{method.name}</h3>
-          <p class="mt-2 text-muted">{method.text}</p>
+        <div class="bg-paper p-6">
+          <h3 class="font-semibold">{method.name}</h3>
+          <p class="mt-1.5 text-sm text-muted">{method.text}</p>
         </div>
       ))
     }
-  </div>
-  <p class="mt-8 text-muted">Payment details come with each invoice.</p>
-  <div class="mt-12 rounded-2xl border border-line bg-panel p-7">
-    <h3 class="font-display text-xl font-semibold">{HOURS.title}</h3>
-    <p class="mt-2 max-w-3xl text-muted">{HOURS.text}</p>
+    <div class="bg-panel p-6">
+      <h3 class="font-semibold">{HOURS.title}</h3>
+      <p class="mt-1.5 text-sm text-muted">{HOURS.text}</p>
+    </div>
   </div>
 </Section>
