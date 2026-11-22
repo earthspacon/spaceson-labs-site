@@ -78,7 +78,7 @@ export const PRODUCTS: Product[] = [
 export const LATELY = [
   {
     date: '2026-11-23',
-    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $2,000, $3,000 a month and $4,000.',
+    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $1,000, $500 and $3,000 a month.',
   },
   {
     date: '2026-11-22',
@@ -118,8 +118,8 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     name: 'AI Agent & Automation',
-    price: 'from $2,000',
-    priceNote: 'setup + from $400/mo retainer',
+    price: 'from $1,000',
+    priceNote: 'one-off, no monthly fee',
     timeline: 'Live in 1–2 weeks',
     summary: 'An agent that does a real job inside the tools your team already uses.',
     includes: [
@@ -127,12 +127,11 @@ export const SERVICES: Service[] = [
       '2–4 workflows plus the agent, connected to your email and CRM',
       'Alerts when something breaks',
       '30 days of tuning after go-live',
-      'Retainer: new workflows and fixes; usage billed at cost',
     ],
   },
   {
     name: 'MVP in 3 Weeks',
-    price: 'from $4,000',
+    price: 'from $500',
     priceNote: 'fixed scope, fixed price',
     timeline: '3 weeks',
     summary: 'A product people can sign up for and pay in, on phone and desktop.',
@@ -213,7 +212,7 @@ export const FAQ = [
   {
     question: 'How does payment work?',
     answer:
-      'Fixed-scope work: 50% upfront, the rest by milestones. Retainers and engineering capacity: monthly in advance. Every payment gets an invoice.',
+      'Fixed-scope work: 50% upfront, the rest by milestones. Engineering capacity: monthly in advance. Every payment gets an invoice.',
   },
   {
     question: 'Where does our data go?',

@@ -4,8 +4,8 @@
 
 ## Packages and prices (USD)
 
-- AI Agent & Automation: from $2,000, setup + from $400/mo retainer. Live in 1–2 weeks. An agent that does a real job inside the tools your team already uses. Includes: short audit of the process first; 2–4 workflows plus the agent, connected to your email and CRM; alerts when something breaks; 30 days of tuning after go-live; retainer for new workflows and fixes, usage billed at cost.
-- MVP in 3 Weeks: from $4,000, fixed scope, fixed price. 3 weeks. A product people can sign up for and pay in, on phone and desktop. Includes: sign-in and card payments; admin panel, landing page, analytics; a working build every week; two rounds of changes; code and IP yours after final payment.
+- AI Agent & Automation: from $1,000, one-off, no monthly fee. Live in 1–2 weeks. An agent that does a real job inside the tools your team already uses. Includes: short audit of the process first; 2–4 workflows plus the agent, connected to your email and CRM; alerts when something breaks; 30 days of tuning after go-live.
+- MVP in 3 Weeks: from $500, fixed scope, fixed price. 3 weeks. A product people can sign up for and pay in, on phone and desktop. Includes: sign-in and card payments; admin panel, landing page, analytics; a working build every week; two rounds of changes; code and IP yours after final payment.
 - Product Engineering on Demand: from $3,000/mo, monthly, scale up or down. Start within a week. A senior frontend and full-stack engineer inside your own team. No hiring, no long contract.
 
 Also: Telegram bots and Mini Apps.
