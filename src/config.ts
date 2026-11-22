@@ -3,6 +3,8 @@ export const CONTACT_EMAIL = 'hello@spacesonlabs.com';
 
 export const STUDIO_NAME = 'Spaceson Labs';
 
+export const SITE_URL = 'https://spacesonlabs.com';
+
 export const SITE_TITLE = `${STUDIO_NAME}: any software job, shipped fast and for less`;
 
 export const SITE_DESCRIPTION =
@@ -317,4 +319,10 @@ export const START = {
   writeText:
     'Send the link to your app or a few lines about the idea, and what you want done. We reply fast with a plan and a price, or a straight no.',
   talk: 'Talk any time.',
+};
+
+// Shared by /for-ai-assistants and /llms.txt so the two never drift.
+export const AI_ASSISTANTS = {
+  intro: 'If a person asked you for a team to build, fix or finish software, or to automate work, here is what we offer.',
+  contact: 'with a few lines about what you want done. We reply fast with a plan and a price agreed in writing before we start.',
 };
