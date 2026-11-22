@@ -1,0 +1,38 @@
+---
+import CheckField from '../components/CheckField.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { CONTACT_EMAIL, STUDIO_NAME } from '../config';
+import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<Base title={`Free app check | ${STUDIO_NAME}`} description="See what breaks first in your app once real users arrive." isNoindex>
+  <Header />
+  <main class="px-5 pt-10 pb-20 sm:px-8 sm:pt-16">
+    <div class="mx-auto grid max-w-3xl gap-6">
+      <div>
+        <h1 class="text-h2 font-semibold">Free app check</h1>
+        <p class="mt-3 text-muted">
+          Paste your site or your public GitHub repo. You see what breaks first once real users arrive, worst first, with
+          the file and line.
+        </p>
+      </div>
+      <CheckField output="check-output" />
+      <div id="check-output" class="empty:hidden" aria-live="polite"></div>
+      <p class="text-sm text-muted">
+        Want it fixed? <a href={`${base}#start`} class="link">Tell us what you need</a> or write to
+        <a href={`mailto:${CONTACT_EMAIL}`} class="link">{CONTACT_EMAIL}</a>.
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { runFromQuery, setupCheckForms } from '../lib/check-client';
+
+  setupCheckForms();
+  runFromQuery();
+</script>

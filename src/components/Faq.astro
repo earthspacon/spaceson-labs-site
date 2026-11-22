@@ -1,21 +1,27 @@
 ---
 import { FAQ } from '../config';
+import { icon } from '../lib/check-card';
 import Section from './Section.astro';
+
+const half = Math.ceil(FAQ.length / 2);
+const columns = [FAQ.slice(0, half), FAQ.slice(half)];
 ---
 
-<Section id="faq" title="Questions">
-  <div class="divide-y divide-line border-y border-line">
+<Section id="faq" title="Questions" tone="panel">
+  <div class="grid gap-x-12 border-b border-line lg:grid-cols-2">
     {
-      FAQ.map((item) => (
-        <details class="group py-4">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-semibold [&::-webkit-details-marker]:hidden">
-            {item.question}
-            <span class="shrink-0 text-xl text-muted transition group-open:rotate-45" aria-hidden="true">
-              +
-            </span>
-          </summary>
-          <p class="mt-3 max-w-3xl text-muted">{item.answer}</p>
-        </details>
+      columns.map((items) => (
+        <div class="divide-y divide-line border-t border-line">
+          {items.map((item) => (
+            <details class="group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 font-semibold [&::-webkit-details-marker]:hidden">
+                {item.question}
+                <span class="shrink-0 text-muted transition group-open:rotate-180" set:html={icon('chevron')} />
+              </summary>
+              <p class="mt-3 text-muted">{item.answer}</p>
+            </details>
+          ))}
+        </div>
       ))
     }
   </div>

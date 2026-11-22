@@ -1,27 +1,79 @@
 ---
-import { CONTACT_EMAIL, HERO } from '../config';
+import { HERO, SERVICES } from '../config';
+import sampleAudit from '../data/sample-audit.json';
+import sampleCheck from '../data/sample-check.json';
+import { type CheckResult, icon, renderCheckCard } from '../lib/check-card';
+import CheckField from './CheckField.astro';
+
+const HERO_ROWS = 5;
+
+const result = sampleCheck as CheckResult;
+const pricedServices = SERVICES.filter((service) => service.price.startsWith('from'));
+const firstFail = result.checks[0];
+const { pr } = sampleAudit;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
-<section id="top" class="px-5 pt-12 pb-10 sm:px-8 lg:pt-16 lg:pb-12">
-  <div class="mx-auto max-w-page">
-    <h1 class="max-w-3xl text-4xl leading-[1.08] font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem]">
-      {HERO.title}
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-muted sm:text-xl">{HERO.text}</p>
-    <div class="mt-7 flex flex-wrap items-center gap-3">
-      <a
-        href={`mailto:${CONTACT_EMAIL}`}
-        class="rounded-md bg-ink px-5 py-3 font-semibold text-paper transition hover:bg-accent"
-      >
-        Email us
-      </a>
-      <a
-        href="#products"
-        class="rounded-md border border-line px-5 py-3 font-semibold transition hover:border-ink"
-      >
-        See the products
-      </a>
-      <p class="text-sm text-muted sm:ml-3">{HERO.location}</p>
+<section class="hero px-5 pt-5 pb-16 sm:px-8 sm:pt-14 lg:pt-20 lg:pb-24">
+  <div class="mx-auto grid max-w-page gap-6 lg:grid-cols-12 lg:gap-12">
+    <div class="lg:col-span-6 lg:pt-6">
+      <h1 class="text-display font-semibold text-balance">{HERO.title}</h1>
+      <p class="mt-3 max-w-xl text-base leading-normal text-muted sm:mt-6 sm:text-lg">{HERO.text}</p>
+
+      <div class="hero-offer mt-4 sm:mt-8 sm:rounded-xl sm:border sm:border-line sm:bg-panel sm:p-5">
+        <p class="font-semibold">{HERO.offer}</p>
+        <div class="mt-3">
+          <CheckField output="hero-output" />
+        </div>
+        <p class="mt-1 text-sm">
+          {HERO.anchor.text} <strong class="font-semibold">{HERO.anchor.price}</strong>.{' '}
+          <a href={`${base}#check`} class="link">{HERO.anchor.link}</a>
+        </p>
+      </div>
+
+      <ul class="hidden mt-8 grid-cols-2 border-t border-l border-line text-sm lg:grid">
+        {
+          pricedServices.map((service) => (
+            <li class="border-r border-b border-line">
+              <a href={`${base}#work`} class="flex items-baseline justify-between gap-3 px-4 py-3 transition hover:bg-panel">
+                <span>{service.name}</span>
+                <span class="font-semibold whitespace-nowrap">{service.price}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="lg:col-span-6">
+      <p class="hero-label mb-2 text-sm text-muted">{HERO.sampleLabel}</p>
+      <div id="hero-output" aria-live="polite">
+        <div class="hero-sample">
+        <Fragment set:html={renderCheckCard({ result, limit: HERO_ROWS, isAnimated: true })} />
+        <div class="pr-strip">
+          <p class="pr-before">
+            <span class="sr-only">Before:</span>
+            <s>{firstFail.title}</s>
+          </p>
+          <p class="pr-after">
+            <span class="pr-title"><Fragment set:html={icon('pr')} />PR #{pr.number} {pr.title}</span>
+            <span class="pr-stats"><span class="pr-add">+{pr.added}</span> <span class="pr-del">−{pr.removed}</span></span>
+            <span class="pr-tests"><Fragment set:html={icon('pass')} />{pr.ci.passed} tests passing</span>
+          </p>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  @media (max-width: 1023px) {
+    .hero-sample :global(.cc-labels),
+    .hero-sample :global(.cc-row:nth-child(n + 3)),
+    .hero-sample :global(.cc-more),
+    .hero-sample :global(.cc-info) {
+      display: none;
+    }
+  }
+</style>

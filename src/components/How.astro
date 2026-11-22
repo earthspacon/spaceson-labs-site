@@ -1,0 +1,21 @@
+---
+import { HOW } from '../config';
+import Section from './Section.astro';
+---
+
+<Section id="how" title={HOW.title} intro={HOW.intro} tone="panel">
+  <ol class="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      HOW.steps.map((step) => (
+        <li class="border-t-2 border-ink pt-4">
+          <h3 class="text-lg font-semibold">{step.name}</h3>
+          <p class="mt-2 text-muted">{step.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="mt-12 grid gap-2 border-t border-line pt-6 sm:grid-cols-2 sm:gap-8">
+    <p class="font-semibold">{HOW.talk}</p>
+    <p class="text-muted">{HOW.payment}</p>
+  </div>
+</Section>

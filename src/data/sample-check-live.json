@@ -1,0 +1,58 @@
+{
+  "target": "https://shiftboard-sample.spacesonlabs.com",
+  "mode": "live",
+  "name": "shiftboard-sample.spacesonlabs.com",
+  "ms": 9000,
+  "commit": null,
+  "failed": 3,
+  "total": 5,
+  "labels": ["Made in Lovable", "Takes payments"],
+  "info": null,
+  "checks": [
+    {
+      "id": "U1",
+      "status": "fail",
+      "title": "Secret key in browser code",
+      "where": "assets/index-B7x2.js",
+      "fix": "2 h",
+      "why": "A service key that skips every database rule is in the code every visitor downloads.",
+      "tag": "week"
+    },
+    {
+      "id": "U2",
+      "status": "warn",
+      "title": "No error tracking",
+      "where": null,
+      "fix": "1 h",
+      "why": "When a user hits a bug, nobody hears about it.",
+      "tag": "full"
+    },
+    {
+      "id": "U3",
+      "status": "warn",
+      "title": "Source code public",
+      "where": "assets/index-B7x2.js.map",
+      "fix": "1 h",
+      "why": "Source maps are published, so anyone can download your full source.",
+      "tag": "full"
+    },
+    {
+      "id": "U4",
+      "status": "pass",
+      "title": "No .env or .git exposed",
+      "where": null,
+      "fix": null,
+      "why": "Both paths return the app page, not a file.",
+      "tag": null
+    },
+    {
+      "id": "U5",
+      "status": "pass",
+      "title": "HTTPS and HSTS on",
+      "where": null,
+      "fix": null,
+      "why": "A content security policy is missing. Low risk on its own.",
+      "tag": null
+    }
+  ]
+}

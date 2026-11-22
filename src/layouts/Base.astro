@@ -2,9 +2,9 @@
 import '../styles/global.css';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
 
-type Props = { title?: string; description?: string };
+type Props = { title?: string; description?: string; isNoindex?: boolean };
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, isNoindex = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base}og.png`;
 ---
@@ -16,8 +16,9 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {isNoindex && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#0e1013" />
+    <meta name="theme-color" content="#10131a" />
     <script is:inline>
       try {
         if (localStorage.theme === 'light') {

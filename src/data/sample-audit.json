@@ -1,0 +1,113 @@
+{
+  "name": "shiftboard-sample",
+  "summary": {
+    "findings": 9,
+    "critical": 2,
+    "high": 3,
+    "medium": 4,
+    "fixed": 1,
+    "estimate": "6–8 days"
+  },
+  "findings": [
+    {
+      "severity": "critical",
+      "see": "A stranger can read all 212 client names and phone numbers",
+      "where": "supabase/migrations/0001_init.sql:14",
+      "fix": "Row-level security, an owner policy, tests",
+      "estimate": "fixed in PR #1",
+      "isFixed": true
+    },
+    {
+      "severity": "critical",
+      "see": "A key that skips every database rule ships to the browser",
+      "where": "src/lib/admin.ts:3",
+      "fix": "Move to a server function, rotate the key",
+      "estimate": "2 h",
+      "isFixed": false
+    },
+    {
+      "severity": "high",
+      "see": "A failed payment still unlocks the paid plan",
+      "where": "supabase/functions/stripe-webhook/index.ts:58",
+      "fix": "Check payment status first, add tests",
+      "estimate": "3 h",
+      "isFixed": false
+    },
+    {
+      "severity": "high",
+      "see": "Any change can break sign-up unnoticed: no tests",
+      "where": "repo",
+      "fix": "Tests for sign-up, shifts, payments",
+      "estimate": "2 days",
+      "isFixed": false
+    },
+    {
+      "severity": "high",
+      "see": "Nobody hears when the app crashes",
+      "where": "no error tracking",
+      "fix": "Error alerts to your email",
+      "estimate": "1 h",
+      "isFixed": false
+    },
+    {
+      "severity": "medium",
+      "see": "Broken code goes straight to users",
+      "where": "no checks before deploy",
+      "fix": "Tests on every push",
+      "estimate": "1 h",
+      "isFixed": false
+    },
+    {
+      "severity": "medium",
+      "see": "One page holds half the app",
+      "where": "src/pages/Dashboard.tsx",
+      "fix": "Split by feature",
+      "estimate": "1–2 days",
+      "isFixed": false
+    },
+    {
+      "severity": "medium",
+      "see": "Whole classes of crashes pass the compiler",
+      "where": "tsconfig.app.json",
+      "fix": "Turn on strictNullChecks, fix the errors",
+      "estimate": "1–2 days",
+      "isFixed": false
+    },
+    {
+      "severity": "medium",
+      "see": "The full source can be downloaded",
+      "where": "public source maps",
+      "fix": "Turn them off in the build",
+      "estimate": "0.5 h",
+      "isFixed": false
+    }
+  ],
+  "firstFinding": "Table clients has no row-level security. Anyone with the public key, which every visitor's browser has, can run one query and get all 212 rows. Fix: enable row-level security, add an owner policy, add a test that a user from company B can't read company A's clients.",
+  "pr": {
+    "number": 1,
+    "title": "Lock down clients and shifts",
+    "added": 42,
+    "removed": 3,
+    "files": 2,
+    "fixesCheck": "G4",
+    "diffFile": "supabase/migrations/0002_rls.sql",
+    "diff": [
+      "alter table clients enable row level security;",
+      "create policy \"own company reads clients\" on clients",
+      "  for select using (company_id = auth_company_id());",
+      "alter table shifts enable row level security;",
+      "create policy \"own company reads shifts\" on shifts",
+      "  for select using (company_id = auth_company_id());"
+    ],
+    "testFile": "supabase/tests/rls.test.ts",
+    "tests": [
+      "anonymous visitor gets 0 clients",
+      "user from company B can't read company A",
+      "owner reads their own clients",
+      "anonymous visitor can't add a client",
+      "user from company B can't edit company A's client",
+      "shifts follow the same rule"
+    ],
+    "ci": { "passed": 6, "failed": 0, "seconds": 4.1 }
+  }
+}

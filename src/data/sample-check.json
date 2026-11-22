@@ -1,0 +1,130 @@
+{
+  "target": "github.com/spacesonlabs/shiftboard-sample",
+  "mode": "repo",
+  "name": "shiftboard-sample",
+  "ms": 2800,
+  "commit": "4f1c2a9",
+  "failed": 8,
+  "total": 13,
+  "labels": ["Made in Lovable", "Takes payments"],
+  "info": { "authors": 1, "lastCommitDays": 3 },
+  "checks": [
+    {
+      "id": "G4",
+      "status": "fail",
+      "title": "Anyone can read table clients",
+      "where": "supabase/migrations/0001_init.sql:14",
+      "fix": "1 h",
+      "why": "The public key ships to every visitor's browser by design. With no row-level security on this table, one query with that key returns every client.",
+      "tag": "week"
+    },
+    {
+      "id": "G6",
+      "status": "fail",
+      "title": "Secret key in browser code",
+      "where": "src/lib/admin.ts:3",
+      "fix": "2 h",
+      "why": "A service key skips every database rule, and this one is bundled into the code every visitor downloads.",
+      "tag": "full"
+    },
+    {
+      "id": "G8",
+      "status": "fail",
+      "title": "Payment code has no test",
+      "where": "supabase/functions/stripe-webhook/",
+      "fix": "3 h",
+      "why": "Checkout and the payment webhook change with every prompt, and nothing checks that a failed payment stays failed.",
+      "tag": "full"
+    },
+    {
+      "id": "G1",
+      "status": "fail",
+      "title": "No tests",
+      "where": null,
+      "fix": "days",
+      "why": "There are no test files and no test script. A change can break sign-up and nobody notices until a user does.",
+      "tag": "full"
+    },
+    {
+      "id": "G3",
+      "status": "fail",
+      "title": "Crashes go unseen",
+      "where": null,
+      "fix": "1 h",
+      "why": "No error tracking is installed. When the app crashes for a user, you hear about it from the user, if at all.",
+      "tag": "full"
+    },
+    {
+      "id": "G2",
+      "status": "fail",
+      "title": "Nothing runs before deploy",
+      "where": null,
+      "fix": "1 h",
+      "why": "There is no workflow that runs checks on a change, so a broken change goes straight to users.",
+      "tag": "full"
+    },
+    {
+      "id": "G12",
+      "status": "fail",
+      "title": "File too big to change safely",
+      "where": "src/pages/Dashboard.tsx",
+      "fix": "days",
+      "why": "This page is 1,240 lines and holds half the app. Every edit there risks breaking something unrelated.",
+      "tag": "full"
+    },
+    {
+      "id": "G13",
+      "status": "fail",
+      "title": "Strict type checks off",
+      "where": "tsconfig.app.json",
+      "fix": "days",
+      "why": "strictNullChecks is false, so the compiler lets a whole class of crashes through to users.",
+      "tag": "full"
+    },
+    {
+      "id": "G5",
+      "status": "pass",
+      "title": "No open write policies",
+      "where": null,
+      "fix": null,
+      "why": "No policy lets an anonymous visitor change rows.",
+      "tag": null
+    },
+    {
+      "id": "G7",
+      "status": "pass",
+      "title": "No secrets in .env",
+      "where": null,
+      "fix": null,
+      "why": "Only the public Supabase URL and key are committed. Those are meant to be public.",
+      "tag": null
+    },
+    {
+      "id": "G10",
+      "status": "pass",
+      "title": "No known-vulnerable packages",
+      "where": null,
+      "fix": null,
+      "why": "None of the installed packages has a published security bug.",
+      "tag": null
+    },
+    {
+      "id": "G11",
+      "status": "pass",
+      "title": "Dependencies within one major version",
+      "where": null,
+      "fix": null,
+      "why": "Every main dependency is at most one major version behind.",
+      "tag": null
+    },
+    {
+      "id": "G9",
+      "status": "pass",
+      "title": "Schema in the repo",
+      "where": "supabase/migrations/",
+      "fix": null,
+      "why": "The database can be rebuilt from the migrations in the repo.",
+      "tag": null
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+---
+import { CHECK_FIELD } from '../config';
+
+type Props = {
+  output: string;
+  label?: string;
+};
+
+const { output, label = 'Your site or GitHub repo' } = Astro.props;
+const inputId = `${output}-input`;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<form class="check-form" data-check-form={output} action={`${base}check`} method="get" novalidate>
+  <label for={inputId} class="sr-only">{label}</label>
+  <div class="flex flex-col gap-2 sm:flex-row">
+    <input
+      id={inputId}
+      class="field"
+      type="text"
+      name="t"
+      inputmode="url"
+      autocomplete="url"
+      autocapitalize="off"
+      spellcheck="false"
+      placeholder={CHECK_FIELD.placeholder}
+      required
+    />
+    <button type="submit" class="btn btn-primary">{CHECK_FIELD.button}</button>
+  </div>
+  <p class="mt-2 text-sm text-muted" data-check-hint aria-live="polite">{CHECK_FIELD.hint}</p>
+</form>

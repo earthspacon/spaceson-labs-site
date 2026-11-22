@@ -1,0 +1,351 @@
+/* Check card: shared by the hero sample, the live-site sample and real results from /api/check. */
+.cc {
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+  background: var(--raised);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  text-align: left;
+}
+
+.cc-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 1rem;
+  padding: 1rem 1.1rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.cc-name {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.cc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.cc-score {
+  align-self: start;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cc-score strong {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--fail);
+  font-variant-numeric: tabular-nums;
+}
+
+.cc-labels {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+.cc-labels li {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.cc-rows {
+  list-style: none;
+}
+
+.cc-row + .cc-row {
+  border-top: 1px solid var(--line);
+}
+
+.cc-row summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cc-row summary::-webkit-details-marker {
+  display: none;
+}
+
+.cc-row summary:hover {
+  background: color-mix(in oklab, var(--panel) 70%, transparent);
+}
+
+.cc-status {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.05rem;
+  border-radius: 0.375rem;
+}
+
+.cc-status .ic {
+  width: 0.95rem;
+  height: 0.95rem;
+  stroke-width: 2.6;
+}
+
+.is-fail .cc-status {
+  color: var(--fail);
+  background: color-mix(in oklab, var(--fail) 16%, transparent);
+}
+
+.is-warn .cc-status {
+  color: var(--warn);
+  background: color-mix(in oklab, var(--warn) 16%, transparent);
+}
+
+.is-pass .cc-status {
+  color: var(--pass);
+  background: color-mix(in oklab, var(--pass) 14%, transparent);
+}
+
+.cc-body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cc-row-title {
+  font-size: 0.95rem;
+  font-weight: 560;
+  line-height: 1.35;
+}
+
+.is-pass .cc-row-title {
+  color: var(--muted);
+  font-weight: 450;
+}
+
+.cc-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.75rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.cc-where {
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+.cc-chevron {
+  color: var(--muted);
+  margin-top: 0.2rem;
+  transition: transform 160ms ease-out;
+}
+
+details[open] > summary .cc-chevron {
+  transform: rotate(180deg);
+}
+
+.cc-why {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+  padding: 0 1.1rem 0.85rem 3.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.cc-tag {
+  border-radius: 0.375rem;
+  background: var(--panel);
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+.cc-more,
+.cc-info {
+  padding: 0.6rem 1.1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.cc-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1rem;
+}
+
+.cc-footer-link {
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+.cc-error {
+  padding: 1rem 1.1rem;
+  border-color: color-mix(in oklab, var(--warn) 45%, var(--line));
+}
+
+.cc-error-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.cc-error-title .ic {
+  color: var(--warn);
+}
+
+.cc-error-text {
+  margin-top: 0.35rem;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.cc-loading {
+  padding: 1rem 1.1rem;
+}
+
+.cc-progress {
+  height: 3px;
+  margin-top: 0.9rem;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.cc-progress span {
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--accent);
+  animation: cc-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes cc-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* The one authored moment: hero rows tick from pending to their result once, on load. */
+.cc-animated .cc-row .cc-status {
+  animation: cc-tick 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(250ms + var(--i) * 320ms);
+}
+
+.cc-animated .cc-row .cc-row-title {
+  animation: cc-reveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(250ms + var(--i) * 320ms);
+}
+
+@keyframes cc-tick {
+  from {
+    color: var(--muted);
+    background: var(--panel);
+    transform: scale(0.8);
+  }
+}
+
+@keyframes cc-reveal {
+  from {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-animated .cc-row .cc-status,
+  .cc-animated .cc-row .cc-row-title,
+  .cc-progress span {
+    animation: none;
+  }
+}
+
+/* Pull request strip under the hero card: the first fail, fixed. */
+.pr-strip {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--pass) 35%, var(--line));
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--pass) 6%, var(--raised));
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+}
+
+.pr-before {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.pr-before s {
+  text-decoration-color: var(--fail);
+  text-decoration-thickness: 2px;
+}
+
+.pr-after {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.75rem;
+}
+
+.pr-after .ic {
+  color: var(--pass);
+}
+
+.pr-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+}
+
+.pr-stats {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.pr-add {
+  color: var(--pass);
+}
+
+.pr-del {
+  color: var(--fail);
+}
+
+.pr-tests {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--pass);
+  font-weight: 560;
+}

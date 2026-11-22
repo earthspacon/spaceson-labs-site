@@ -1,0 +1,30 @@
+---
+import { CONTACT_EMAIL, START } from '../config';
+import { icon } from '../lib/check-card';
+import CheckField from './CheckField.astro';
+---
+
+<section id="start" class="scroll-mt-16 border-t border-line px-5 py-16 sm:px-8 lg:py-24">
+  <div class="mx-auto max-w-page">
+    <h2 class="text-display max-w-3xl font-semibold text-balance">{START.title}</h2>
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-xl border border-line bg-panel p-6">
+        <h3 class="text-lg font-semibold">{START.checkLead}</h3>
+        <div class="mt-4">
+          <CheckField output="start-output" />
+        </div>
+        <div id="start-output" class="mt-4 empty:hidden" aria-live="polite"></div>
+      </div>
+      <div class="flex flex-col justify-between gap-6 rounded-xl border border-line p-6">
+        <div>
+          <h3 class="text-lg font-semibold">{START.writeLead}</h3>
+          <p class="mt-2 text-muted">{START.writeText}</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <a href={`mailto:${CONTACT_EMAIL}`} class="btn btn-primary">{CONTACT_EMAIL}<Fragment set:html={icon('arrow')} /></a>
+          <p class="text-sm text-muted">{START.talk}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

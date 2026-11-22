@@ -1,42 +1,182 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
+@import './check-card.css';
 
 @theme inline {
   --color-ink: var(--ink);
   --color-paper: var(--paper);
   --color-panel: var(--panel);
+  --color-raised: var(--raised);
   --color-line: var(--line);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-fail: var(--fail);
+  --color-warn: var(--warn);
+  --color-pass: var(--pass);
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --container-page: 1100px;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --container-page: 1200px;
+  --text-display: clamp(2.25rem, 1.35rem + 3.3vw, 4rem);
+  --text-display--line-height: 1.03;
+  --text-display--letter-spacing: -0.035em;
+  --text-h2: clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.025em;
 }
 
 :root {
-  --ink: #e8e9eb;
-  --paper: #0e1013;
-  --panel: #16191d;
-  --line: #2a2e34;
-  --muted: #9a9fa8;
-  --accent: #f26b33;
+  --ink: #e9ecf2;
+  --paper: #10131a;
+  --panel: #151922;
+  --raised: #1b202b;
+  --line: #272d3a;
+  --muted: #9aa3b5;
+  --accent: #93a8ff;
+  --accent-ink: #10131a;
+  --fail: #f47272;
+  --warn: #e9b650;
+  --pass: #52cc8a;
+  --shadow: 0 24px 60px -24px rgb(0 0 0 / 0.7), 0 2px 6px rgb(0 0 0 / 0.35);
   color-scheme: dark;
 }
 
 :root[data-theme='light'] {
-  --ink: #0e0f11;
+  --ink: #10131a;
   --paper: #ffffff;
-  --panel: #f5f5f4;
-  --line: #e2e2df;
-  --muted: #5c5f66;
-  --accent: #d9480f;
+  --panel: #f4f5f8;
+  --raised: #ffffff;
+  --line: #e0e3ea;
+  --muted: #565f72;
+  --accent: #3a50d4;
+  --accent-ink: #ffffff;
+  --fail: #c63737;
+  --warn: #9a6400;
+  --pass: #1d8650;
+  --shadow: 0 24px 50px -28px rgb(16 19 26 / 0.35), 0 2px 6px rgb(16 19 26 / 0.08);
   color-scheme: light;
 }
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--line) var(--paper);
 }
 
 body {
   background: var(--color-paper);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 35%, transparent);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input {
+  caret-color: var(--accent);
+}
+
+code,
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+}
+
+a {
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.15rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      background-color 160ms ease-out,
+      border-color 160ms ease-out,
+      color 160ms ease-out;
+  }
+
+  .btn .ic {
+    width: 1.05em;
+    height: 1.05em;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn-primary:disabled {
+    cursor: progress;
+    opacity: 0.6;
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--line);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--ink);
+  }
+
+  .link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  }
+
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .field {
+    width: 100%;
+    min-width: 0;
+    border-radius: 0.5rem;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    padding: 0.75rem 0.95rem;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+
+  .field::placeholder {
+    color: var(--muted);
+    opacity: 0.85;
+  }
+
+  .field:focus-visible {
+    outline-offset: 0;
+    border-color: var(--accent);
+  }
+
+  .ic {
+    width: 1em;
+    height: 1em;
+    flex: none;
+  }
 }

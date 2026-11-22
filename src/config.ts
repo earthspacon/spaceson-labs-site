@@ -3,22 +3,259 @@ export const CONTACT_EMAIL = 'hello@spacesonlabs.com';
 
 export const STUDIO_NAME = 'Spaceson Labs';
 
-export const SITE_TITLE = `${STUDIO_NAME} — software products and AI automations at a fixed price`;
+export const SITE_TITLE = `${STUDIO_NAME}: any software job, shipped fast and for less`;
 
 export const SITE_DESCRIPTION =
-  'Spaceson Labs builds software products and AI automations for businesses at a fixed price, and runs three paid products of its own: InboxSieve, PriceDawn and MonthMemo.';
+  'We fix half-built apps, build new products, automate work and join your team as engineers. Free app check, prices from $500, agreed in writing before we start.';
+
+export const NAV_LINKS = [
+  { href: '#work', label: 'What we do' },
+  { href: '#check', label: 'Free check' },
+  { href: '#how', label: 'How we work' },
+  { href: '#sample', label: 'Sample audit' },
+  { href: '#faq', label: 'Questions' },
+];
 
 export const HERO = {
-  title: 'We build software products and AI automations, and run three of our own.',
-  text: 'One fixed price agreed before work starts. A working build every week. The code is yours at handover.',
-  location: 'Remote · UTC+5 · EU and US hours',
+  title: 'Any software job, shipped fast and for less.',
+  text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
+  offer: 'Start free: see what breaks first in your app.',
+  anchor: { text: 'Fixing what it finds starts', price: 'from $500', link: 'What you get' },
+  sampleLabel: 'Our sample app · faults planted on purpose',
 };
+
+export const CHECK_FIELD = {
+  placeholder: 'your-app.com or github.com/you/your-app',
+  button: 'Check it free',
+  hint: 'No signup. We only read what is public.',
+};
+
+export type Service = {
+  name: string;
+  text: string;
+  price: string;
+};
+
+export const SERVICES: Service[] = [
+  {
+    name: 'Fix or finish an app',
+    text: 'A half-built app from Lovable, Bolt, Replit, Cursor or a freelancer who went quiet, made safe for real users.',
+    price: 'from $500',
+  },
+  {
+    name: 'A new product from an idea',
+    text: 'A first version with sign-in and your core flow, scoped with you before any code is written.',
+    price: 'from $2,000',
+  },
+  {
+    name: 'Automations and AI agents',
+    text: 'One job inside the tools you already use. Anything that sends money or messages a customer waits for your OK.',
+    price: 'from $500',
+  },
+  {
+    name: 'An engineer on your team',
+    text: 'A senior full-stack engineer in your repo, tracker and standups. Month to month.',
+    price: 'from $3,000/mo',
+  },
+  {
+    name: 'Anything else',
+    text: 'Telegram bots, internal tools, integrations, migrations, a slow site that needs to be fast. If it is software, ask.',
+    price: 'ask us',
+  },
+];
+
+export const SERVICES_NOTE =
+  'These are starting points. Every price is agreed in writing before we start, and it goes lower or higher with the job.';
+
+export const OFFER = {
+  title: 'Start with a free check. Then we fix it.',
+  check: {
+    name: 'The check, free',
+    text: 'Paste your site or your GitHub repo. In seconds you see what breaks first once real users arrive, worst first, with the file and line. We never touch your database; we read only what is public.',
+  },
+  fix: {
+    name: 'The fix, from $500',
+    items: [
+      'A written audit of the whole app, ranked, in plain English, in your repo and as a PDF.',
+      'The worst problem fixed, with tests that prove it, as a pull request into your repo.',
+      'One price, in writing, for the rest. The audit and the fix are yours whether you go on or not.',
+    ],
+  },
+  cta: 'Start with the fix',
+  sampleCaption: 'Live-site check on our sample app',
+  repoPrompt: 'Public repo? Check the code too: it shows tests, payments and database rules a site check cannot see.',
+};
+
+export const BREAKS = {
+  title: 'What breaks once real users arrive',
+  quote: '“$18K saved on development. $40K+ needed to fix what $18K bought me.”',
+  quoteSource: 'A founder on r/SaaS',
+  quoteUrl: 'https://www.reddit.com/r/SaaS/comments/1sd50dh/',
+  quoteAfter: 'The free check and the first fix are there so you find out early, while it is still cheap.',
+  footnote: 'Each of these is a check in the free tool.',
+  items: [
+    {
+      problem: 'Tables anyone can read',
+      text: 'The public key ships to every browser by design. Without row-level security it opens the whole table.',
+      fix: 'We add the rules and a test that proves a stranger gets nothing.',
+    },
+    {
+      problem: 'Bugs happen and nobody hears',
+      text: 'No error tracking, so you learn about a crash from a refund request.',
+      fix: 'Error alerts go to your email.',
+    },
+    {
+      problem: 'The payment code has no tests',
+      text: 'Checkout and webhooks change with every prompt and nothing checks them.',
+      fix: 'Tests on the payment path.',
+    },
+    {
+      problem: 'Nothing runs before deploy',
+      text: 'A broken change goes straight to users.',
+      fix: 'Tests run on every push.',
+    },
+    {
+      problem: 'A secret key in the browser',
+      text: 'One key that skips every database rule, downloaded by every visitor.',
+      fix: 'Moved to a server function, key rotated.',
+    },
+    {
+      problem: 'Files nobody can change safely',
+      text: 'One giant page holding half the app, where every edit breaks something.',
+      fix: 'Split where the audit says it pays off.',
+    },
+  ],
+};
+
+export const HOW = {
+  title: 'How we work',
+  intro: 'We work hard, and you can see it: every change lands where you can read it the day we make it.',
+  steps: [
+    {
+      name: 'Scope in writing',
+      text: 'What we build, what we leave out and one price, agreed before we start.',
+    },
+    {
+      name: 'Paid by milestone',
+      text: 'Each milestone has a fixed amount and ends with working code merged into your repo and a short note on what changed.',
+    },
+    {
+      name: 'Your repo from day one',
+      text: 'You invite us and every change is a pull request you can read. There is nothing to hand over at the end.',
+    },
+    {
+      name: 'Stop any time',
+      text: 'Stop after any milestone. Finished work is already yours, and any developer can pick it up.',
+    },
+  ],
+  talk: 'Talk any time: email, your team chat or a call when it suits you. We reply fast.',
+  payment: 'Pay by Payoneer invoice (card or bank), SWIFT transfer, or USDT/USDC.',
+};
+
+export const PROMPTING = {
+  title: 'Keep prompting? Yes, until people use it.',
+  lead: 'Lovable, Bolt and Cursor are the fastest way to a first version, and we would tell you to keep going until people use it. People who ship with them say the trouble starts later.',
+  quotes: [
+    {
+      text: 'The pain shows up when you add boring stuff: auth/rbac, db schema changes, background jobs, integrations, deploy/rollback.',
+      source: 'r/nocode',
+      url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op49uuz/',
+    },
+    {
+      text: 'Shipped two things to production with lovable. One survived, one didnt.',
+      source: 'r/nocode',
+      url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op4ov6n/',
+    },
+    {
+      text: 'Great for getting to a working prototype… rough once it is live and has paying users.',
+      source: 'r/nocode',
+      url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op5ba2s/',
+    },
+    {
+      text: 'The generation was fast. The cleanup is a nightmare.',
+      source: 'r/vibecoding, a founder with users and revenue',
+      url: 'https://www.reddit.com/r/vibecoding/comments/1su03dk/',
+    },
+  ],
+  research:
+    'A security researcher found weak row-level security in 170 of 1,645 Lovable apps checked; anyone could read or change those databases. It was filed as CVE-2025-48757, which Lovable disputes.',
+  researchUrl: 'https://nvd.nist.gov/vuln/detail/CVE-2025-48757',
+  close:
+    'That is where we come in: we read the code the way the next developer will, fix the worst problem, and add tests so the next prompt does not undo it. You can keep building features in your AI tool after we are done.',
+};
+
+export const SAMPLE = {
+  title: 'Read a sample audit before you pay for one',
+  text: 'We built a small shift-scheduling app for a cleaning company in Lovable, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
+  run: 'Run the free check on it',
+};
+
+export const FAQ = [
+  {
+    question: 'Prices start at $500. What is the catch?',
+    answer:
+      'A clear scope. Before you pay, we agree in writing what the work covers and what it costs. Small jobs cost less, big ones more, and you see the number first.',
+  },
+  {
+    question: 'What if you take the money and disappear?',
+    answer:
+      'From the first day the work lands in your repo as pull requests, so you see every change as it happens. You pay by milestone, so you never have much at risk before you see work.',
+  },
+  {
+    question: 'Who owns the code?',
+    answer:
+      'You, from the first commit. We work in your repo and on your accounts, with common tools any developer can pick up.',
+  },
+  {
+    question: 'I can’t read code. How do I judge the work?',
+    answer:
+      'Every finding starts with what a user would see, for example “a stranger can read your client list”. The technical name comes second. Every fix ships with tests, and you can re-run the free check and watch the failures go away.',
+  },
+  {
+    question: 'How will I know what’s happening?',
+    answer:
+      'Every change is a pull request with a short note in plain words. You get written updates as we go, and we can talk whenever you want.',
+  },
+  {
+    question: 'Will you tell me to rewrite everything?',
+    answer:
+      'Not by default. We keep what works and fix what breaks. If a rewrite is cheaper than fixing, the audit shows both numbers and you choose.',
+  },
+  {
+    question: 'What will the full job cost?',
+    answer:
+      'Nobody can know before reading the code. After the first fix you get a written scope with one price, split into milestones. You can stop there.',
+  },
+  {
+    question: 'Can’t I fix it with AI myself?',
+    answer:
+      'Often you can, and the free check shows what to fix. If you are not confident running it in production long term, that is the job we do.',
+  },
+  {
+    question: 'What happens when it breaks after you’re done?',
+    answer:
+      'Error alerts are on before we leave, so you hear first. After that you can hire us by the job or by the month, and because the code is in your repo you are never stuck with us.',
+  },
+  {
+    question: 'I only have an idea, no app yet.',
+    answer:
+      'Then we start from the idea. We agree the first version with you in writing, build your core flow first and show it working early. New products start from $2,000.',
+  },
+  {
+    question: 'Do you build AI agents?',
+    answer:
+      'Yes, one workflow at a time, with a written scope. The agent drafts; anything that sends money or goes to a customer waits for your OK. From $500 per workflow.',
+  },
+  {
+    question: 'Who does the work, and when can we talk?',
+    answer:
+      'A senior full-stack engineer who uses AI coding tools and reviews every line before it reaches your repo. Talk any time, by email, chat or a call, and we reply fast.',
+  },
+];
 
 export type Product = {
   name: string;
   job: string;
-  price: string;
-  liveSince: string;
   url: string;
   host: string;
   shot: {
@@ -29,13 +266,15 @@ export type Product = {
   };
 };
 
-// Prices mirror each product's own plan config; dates come from the product repos' git logs.
+export const PRODUCTS_SECTION = {
+  title: 'Apps we run ourselves',
+  intro: 'We build and run our own products on the same rules we use for yours.',
+};
+
 export const PRODUCTS: Product[] = [
   {
     name: 'InboxSieve',
-    job: 'Sorts the messages from a website contact form: removes spam, scores real client requests 0–100 and drafts a reply.',
-    price: 'Free plan · paid from $5/mo',
-    liveSince: '21 Nov 2026',
+    job: 'Sorts contact-form messages: removes spam, scores real client requests and drafts a reply.',
     url: 'https://inboxsieve.com/',
     host: 'inboxsieve.com',
     shot: {
@@ -47,183 +286,35 @@ export const PRODUCTS: Product[] = [
   },
   {
     name: 'PriceDawn',
-    job: "Checks competitors' prices once a day and sends a store owner one email at 7:00 with every change.",
-    price: 'From $9/mo',
-    liveSince: '21 Nov 2026',
+    job: "Checks competitors' prices every day and sends a store owner one morning email with every change.",
     url: 'https://pricedawn.spacesonlabs.com/',
     host: 'pricedawn.spacesonlabs.com',
     shot: {
       src: 'work/pricedawn.webp',
-      alt: 'PriceDawn morning email: a rival product dropped from 24.99 to 19.99, minus 20%, with the link',
+      alt: 'PriceDawn morning email: a rival product dropped in price, with the old price, the new one and the link',
       width: 944,
       height: 540,
     },
   },
   {
     name: 'MonthMemo',
-    job: "Writes each marketing agency client's monthly website report from their analytics. The agency approves, the client gets an email.",
-    price: 'From $9/mo · first month free',
-    liveSince: '21 Nov 2026',
+    job: "Drafts each agency client's monthly website report from their analytics, sent after the agency approves.",
     url: 'https://monthmemo.spacesonlabs.com/',
     host: 'monthmemo.spacesonlabs.com',
     shot: {
       src: 'work/monthmemo.webp',
-      alt: 'MonthMemo report email: sessions up 16% to 4,210, search clicks up 17%, key events down 5%, with a short written summary',
+      alt: 'MonthMemo report email: sessions, search clicks and key events for the month, with a short written summary',
       width: 968,
-      height: 742,
+      height: 688,
     },
   },
 ];
 
-export const LATELY = [
-  {
-    date: '2026-11-23',
-    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $500 and $3,000 a month.',
-  },
-  {
-    date: '2026-11-22',
-    text: 'Monthly prices live on all three products: InboxSieve from $9, PriceDawn from $19, MonthMemo from $29.',
-  },
-  {
-    date: '2026-11-21',
-    text: 'PriceDawn live. Checks up to 1,000 competitor links once a day, sends one email at 7:00 in the store’s time zone, exports price history to CSV. $19 or $49 a month.',
-  },
-  {
-    date: '2026-11-21',
-    text: 'MonthMemo live. Connects Google Analytics and Search Console once, drafts every client’s monthly report, waits for the agency’s approval before sending. $29 a month for 5 clients, $59 for 15.',
-  },
-  {
-    date: '2026-11-21',
-    text: 'InboxSieve live on inboxsieve.com, one day after its first commit.',
-  },
-  {
-    date: '2026-11-20',
-    text: 'InboxSieve: free plan with 50 leads a month, a 14-day trial of the paid plan without a card, prices cut to $9 and $29 a month.',
-  },
-  {
-    date: '2026-11-20',
-    text: 'InboxSieve: Google sign-in, team seats, CSV export and an alert for every hot lead.',
-  },
-];
-
-export type Service = {
-  name: string;
-  price: string;
-  priceNote: string;
-  timeline: string;
-  summary: string;
-  includes: string[];
+export const START = {
+  title: 'Tell us what you need built',
+  checkLead: 'Have an app already? Check it first.',
+  writeLead: 'Or just write to us',
+  writeText:
+    'Send the link to your app or a few lines about the idea, and what you want done. We reply fast with a plan and a price, or a straight no.',
+  talk: 'Talk any time.',
 };
-
-export const SERVICES: Service[] = [
-  {
-    name: 'AI Agent & Automation',
-    price: 'from $500',
-    priceNote: 'one-off, no monthly fee',
-    timeline: 'Live in 1–2 weeks',
-    summary: 'An agent that does a real job inside the tools your team already uses.',
-    includes: [
-      'Short audit of the process first',
-      '2–4 workflows plus the agent, connected to your email and CRM',
-      'Alerts when something breaks',
-      '30 days of tuning after go-live',
-    ],
-  },
-  {
-    name: 'MVP in 3 Weeks',
-    price: 'from $500',
-    priceNote: 'fixed scope, fixed price',
-    timeline: '3 weeks',
-    summary: 'A product people can sign up for and pay in, on phone and desktop.',
-    includes: [
-      'Sign-in and card payments',
-      'Admin panel, landing page, analytics',
-      'A working build every week',
-      'Two rounds of changes',
-      'Code and IP yours after final payment',
-    ],
-  },
-  {
-    name: 'Product Engineering on Demand',
-    price: 'from $3,000/mo',
-    priceNote: 'monthly, scale up or down',
-    timeline: 'Start within a week',
-    summary: 'A senior frontend and full-stack engineer inside your own team.',
-    includes: [
-      'Works in your repo, tracker and standups',
-      'Planning and code review with your team',
-      'Scale up or down month to month',
-      'No hiring, no long contract',
-    ],
-  },
-];
-
-export const SERVICES_ALSO = 'Also: Telegram bots and Mini Apps.';
-
-export const STEPS = [
-  {
-    title: 'Plan',
-    artifact: 'One-page plan with a fixed price, within 24 h',
-    text: 'You send a few lines. We reply with what we build, what we skip, the timeline and one price.',
-  },
-  {
-    title: 'Build',
-    artifact: 'A link to a working build, every week',
-    text: 'You click through the real thing, not a status report. Your notes go into the next week.',
-  },
-  {
-    title: 'Handover',
-    artifact: 'Tests and monitoring, set up and running',
-    text: 'Tests run on every change. Monitoring alerts us when something breaks after launch.',
-  },
-  {
-    title: 'Transfer',
-    artifact: 'The code, accounts and IP, in your name',
-    text: 'After the final payment the repository and all rights move to you.',
-  },
-];
-
-export const PAYMENT_METHODS = [
-  {
-    name: 'Payoneer invoice',
-    text: 'Card or bank transfer in USD or EUR.',
-  },
-  {
-    name: 'SWIFT',
-    text: 'Direct bank transfer in USD or EUR against an invoice.',
-  },
-  {
-    name: 'Crypto',
-    text: 'USDT or USDC. Network and address come with the invoice.',
-  },
-];
-
-export const HOURS = {
-  title: 'Working hours',
-  text: 'UTC+5. EU business hours and the US morning overlap with ours for calls and quick answers.',
-};
-
-export const FAQ = [
-  {
-    question: 'How do you set the price?',
-    answer:
-      'By scope. Before you pay anything you get a one-page plan with features, timeline and one fixed price. The prices above are where each package starts.',
-  },
-  {
-    question: 'How does payment work?',
-    answer:
-      'Fixed-scope work: 50% upfront, the rest by milestones. Engineering capacity: monthly in advance. Every payment gets an invoice.',
-  },
-  {
-    question: 'Where does our data go?',
-    answer: 'Where possible the work runs on your own accounts and keys, so your data stays under your contracts.',
-  },
-  {
-    question: 'Who owns the code?',
-    answer: 'You do. The repository, workflows and all rights move to you after the final payment.',
-  },
-  {
-    question: 'How do we talk day to day?',
-    answer: 'In writing, by email or your team chat, and on a video call for each weekly build.',
-  },
-];
