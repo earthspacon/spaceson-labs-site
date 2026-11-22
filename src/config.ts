@@ -78,7 +78,7 @@ export const PRODUCTS: Product[] = [
 export const LATELY = [
   {
     date: '2026-11-23',
-    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $1,000, $500 and $3,000 a month.',
+    text: 'Prices cut: InboxSieve from $5, PriceDawn from $9, MonthMemo from $9 a month. Labs packages from $500 and $3,000 a month.',
   },
   {
     date: '2026-11-22',
@@ -118,7 +118,7 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     name: 'AI Agent & Automation',
-    price: 'from $1,000',
+    price: 'from $500',
     priceNote: 'one-off, no monthly fee',
     timeline: 'Live in 1–2 weeks',
     summary: 'An agent that does a real job inside the tools your team already uses.',
