@@ -11,10 +11,10 @@ export const SITE_DESCRIPTION =
   'We fix half-built apps, build new products, automate work and join your team as engineers. Free app check, prices from $500, agreed in writing before we start.';
 
 export const NAV_LINKS = [
-  { href: '#work', label: 'What we do' },
+  { href: '#work', label: 'What we take on' },
   { href: '#products', label: 'Our products' },
   { href: '#how', label: 'How we work' },
-  { href: '#check', label: 'Free check' },
+  { href: '#check', label: 'Free app check' },
   { href: '#faq', label: 'Questions' },
 ];
 
@@ -24,12 +24,11 @@ export const HERO = {
   primary: 'Tell us the job',
   secondary: 'Free app check',
   anchor: { text: 'Jobs start', price: 'from $500' },
-  workLabel: 'Built and run by us',
+  workLabel: 'Our products, built and run by us',
 };
 
 export const CHECK_FIELD = {
-  placeholder: 'your-app.com or github.com/you/your-app',
-  placeholderShort: 'your-app.com or GitHub repo',
+  placeholder: 'your-app.com or GitHub repo',
   button: 'Check it free',
   hint: 'No signup. We only read what is public.',
 };
@@ -274,8 +273,8 @@ export const PRODUCTS: Product[] = [
 
 export const START = {
   title: 'Tell us what you need built',
-  checkLead: 'Have an app already? Check it first.',
-  writeLead: 'Or just write to us',
+  writeLead: 'Tell us the job',
+  checkLead: 'Have an app already? Run the free check',
   writeText:
     'Send the link to your app or a few lines about the idea, and what you want done. We reply fast with a plan and a price, or a straight no.',
   talk: 'Talk any time.',

@@ -1,23 +1,17 @@
 ---
 import { CONTACT_EMAIL, START } from '../config';
 import { icon } from '../lib/check-card';
-import CheckField from './CheckField.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
 <section id="start" class="scroll-mt-16 border-t border-line px-5 py-16 sm:px-8 lg:py-24">
   <div class="mx-auto max-w-page">
     <h2 class="text-display max-w-3xl font-semibold text-balance">{START.title}</h2>
-    <div class="mt-10 grid gap-6 lg:grid-cols-2">
-      <div class="rounded-xl border border-line bg-panel p-6">
-        <h3 class="text-xl font-semibold">{START.checkLead}</h3>
-        <div class="mt-4">
-          <CheckField output="start-output" />
-        </div>
-        <div id="start-output" class="mt-4 empty:hidden" aria-live="polite"></div>
-      </div>
-      <div class="flex flex-col justify-between gap-6 rounded-xl border border-line p-6">
+    <div class="mt-10 grid gap-6 lg:grid-cols-12">
+      <div class="flex flex-col justify-between gap-6 rounded-xl border border-line bg-panel p-6 lg:col-span-7">
         <div>
-          <h3 class="text-xl font-semibold">{START.writeLead}</h3>
+          <h3 class="text-h3 font-semibold text-balance">{START.writeLead}</h3>
           <p class="mt-2 text-muted">{START.writeText}</p>
         </div>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -25,6 +19,12 @@ import CheckField from './CheckField.astro';
           <p class="text-sm text-muted">{START.talk}</p>
         </div>
       </div>
+      <a
+        href={`${base}#check`}
+        class="flex items-center justify-between gap-4 rounded-xl border border-line bg-panel p-6 text-lg font-semibold text-balance transition hover:border-ink lg:col-span-5"
+      >
+        {START.checkLead}<span class="shrink-0 text-accent" set:html={icon('arrow')} />
+      </a>
     </div>
   </div>
 </section>
