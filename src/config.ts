@@ -8,7 +8,7 @@ export const SITE_URL = 'https://spacesonlabs.com';
 export const SITE_TITLE = `${STUDIO_NAME}: any software job, shipped fast and for less`;
 
 export const SITE_DESCRIPTION =
-  'We fix half-built apps, build new products, automate work and join your team as engineers. Free app check, prices from $500, agreed in writing before we start.';
+  'We fix half-built apps, build new products, automate work and join your team as engineers. Free app check, single fixes from $150, agreed in writing before we start.';
 
 export const NAV_LINKS = [
   { href: '#products', label: 'Our products' },
@@ -23,7 +23,7 @@ export const HERO = {
   text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
   primary: 'Tell us the job',
   secondary: 'Free app check',
-  anchor: { text: 'Jobs start at', price: '$500', team: 'Who does the work' },
+  anchor: { text: 'Jobs start at', price: '$150', team: 'Who does the work' },
   workLabel: 'Our products, built and run by us',
 };
 
@@ -43,7 +43,7 @@ export const SERVICES: Service[] = [
   {
     name: 'Fix or finish an app',
     text: 'A half-built app from Lovable, Bolt, Replit, Cursor or a freelancer who went quiet, made safe for real users.',
-    price: 'from $500',
+    price: 'from $150',
   },
   {
     name: 'A new product from an idea',
@@ -78,11 +78,11 @@ export const OFFER = {
     text: 'Paste your site or GitHub repo and see what breaks first once real users arrive, with the file and line.',
   },
   fix: {
-    name: 'The fix, from $500',
+    name: 'The fix, from $150',
     items: [
-      'A written audit of the whole app, ranked, in plain English.',
-      'The worst problem fixed, with tests, as a pull request into your repo.',
-      'One price for the rest. The audit and the fix are yours either way.',
+      'One problem fixed, with tests, as a pull request into your repo. From $150.',
+      'A written audit of the whole app, ranked, in plain English, and everything on it fixed. From $500.',
+      'One price, agreed before we start. The audit and the fix are yours either way.',
     ],
   },
   cta: 'Start with the fix',
@@ -154,12 +154,14 @@ export const SAMPLE = {
   title: 'Read a sample audit before you pay for one',
   text: 'We built a small shift-scheduling app for a cleaning company, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
   run: 'Run the free check on it',
+  // Turn on once github.com/spacesonlabs/shiftboard-sample is public.
+  isRunnable: false,
   link: 'Read the full sample audit',
 };
 
 export const FAQ = [
   {
-    question: 'Prices start at $500. What is the catch?',
+    question: 'Prices start at $150. What is the catch?',
     answer:
       'A clear scope. Before you pay, we agree in writing what the work covers and what it costs. Small jobs cost less, big ones more, and you see the number first.',
   },
