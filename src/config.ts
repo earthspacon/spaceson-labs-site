@@ -12,18 +12,19 @@ export const SITE_DESCRIPTION =
 
 export const NAV_LINKS = [
   { href: '#work', label: 'What we do' },
-  { href: '#check', label: 'Free check' },
+  { href: '#products', label: 'Our products' },
   { href: '#how', label: 'How we work' },
-  { href: '#sample', label: 'Sample audit' },
+  { href: '#check', label: 'Free check' },
   { href: '#faq', label: 'Questions' },
 ];
 
 export const HERO = {
   title: 'Any software job, shipped fast and for less.',
   text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
-  offer: 'Start free: see what breaks first in your app.',
-  anchor: { text: 'Fixing what it finds starts', price: 'from $500', link: 'What you get' },
-  sampleLabel: 'Our sample app · faults planted on purpose',
+  primary: 'Tell us the job',
+  secondary: 'Free app check',
+  anchor: { text: 'Jobs start', price: 'from $500' },
+  workLabel: 'Built and run by us',
 };
 
 export const CHECK_FIELD = {
@@ -258,6 +259,8 @@ export const FAQ = [
 
 export type Product = {
   name: string;
+  slug: string;
+  tagline: string;
   job: string;
   url: string;
   host: string;
@@ -277,6 +280,8 @@ export const PRODUCTS_SECTION = {
 export const PRODUCTS: Product[] = [
   {
     name: 'InboxSieve',
+    slug: 'inboxsieve',
+    tagline: 'Sorts contact-form mail and drafts the replies',
     job: 'Sorts contact-form messages: removes spam, scores real client requests and drafts a reply.',
     url: 'https://inboxsieve.com/',
     host: 'inboxsieve.com',
@@ -289,6 +294,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     name: 'PriceDawn',
+    slug: 'pricedawn',
+    tagline: "One morning email with rivals' price changes",
     job: "Checks competitors' prices every day and sends a store owner one morning email with every change.",
     url: 'https://pricedawn.spacesonlabs.com/',
     host: 'pricedawn.spacesonlabs.com',
@@ -301,6 +308,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     name: 'MonthMemo',
+    slug: 'monthmemo',
+    tagline: "Writes an agency's monthly client reports",
     job: "Drafts each agency client's monthly website report from their analytics, sent after the agency approves.",
     url: 'https://monthmemo.spacesonlabs.com/',
     host: 'monthmemo.spacesonlabs.com',

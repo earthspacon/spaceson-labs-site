@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .agents/shots/
+.agents/work-raw/
 !worker/check/test/fixtures/tiny-repo/node_modules/
 .wrangler/
 .dev.vars
