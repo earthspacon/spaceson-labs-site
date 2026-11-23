@@ -33,8 +33,32 @@ function githubRoutes({ files, meta = {} }) {
         return [`${RAW}/${path.split('/').map(encodeURIComponent).join('/')}`, { body: text }]
       }),
     ),
+    'POST https://api.github.com/graphql': (init) => {
+      return { body: { data: { repository: readBlobs({ files, variables: JSON.parse(init.body).variables }) } } }
+    },
     ...registryRoutes({ latest: CLEAN_LATEST }),
   }
+}
+
+function readBlobs({ files, variables }) {
+  return Object.fromEntries(
+    Object.entries(variables)
+      .filter(([name]) => /^e\d+$/.test(name))
+      .map(([name, expression]) => {
+        const path = expression.slice(expression.indexOf(':') + 1)
+        return [`f${name.slice(1)}`, path in files ? { text: files[path], isBinary: false, isTruncated: false } : null]
+      }),
+  )
+}
+
+function readGraphqlPaths(fetch) {
+  return fetch.calls
+    .filter((call) => call.url === 'https://api.github.com/graphql')
+    .flatMap((call) => {
+      return Object.entries(JSON.parse(call.init.body).variables)
+        .filter(([name]) => /^e\d+$/.test(name))
+        .map(([, expression]) => expression.slice(expression.indexOf(':') + 1))
+    })
 }
 
 function run({ routes, githubToken }) {
@@ -82,10 +106,89 @@ describe('repo mode over GitHub', () => {
       files[`supabase/migrations/${String(index + 100)}_t.sql`] = `create table t${index} (id int);\nalter table t${index} enable row level security;\n`
     }
 
-    const { fetch } = await run({ routes: githubRoutes({ files }) })
-    const migrationReads = fetch.calls.filter((call) => call.url.startsWith(RAW) && call.url.includes('migrations'))
+    const { fetch } = await run({ routes: githubRoutes({ files }), githubToken: 'test-token' })
+    const migrationReads = readGraphqlPaths(fetch).filter((path) => path.includes('migrations'))
 
     expect(migrationReads).toHaveLength(50)
+  })
+
+  it('says it could not check row rules when migrations past the cap stay unread', async () => {
+    const files = { ...CLEAN_REPO }
+    for (let index = 0; index < 60; index++) {
+      files[`supabase/migrations/${String(index + 100)}_t.sql`] = `create table t${index} (id int);\nalter table t${index} enable row level security;\n`
+    }
+
+    const { result } = await run({ routes: githubRoutes({ files }), githubToken: 'test-token' })
+
+    expect(result.checks.find((check) => check.id === 'G4')).toMatchObject({
+      status: 'warn',
+      title: 'Could not check table row rules',
+    })
+  })
+
+  it('reads a whole repo in a few GraphQL requests, not one request per file', async () => {
+    const files = { ...CLEAN_REPO }
+    for (let index = 0; index < 250; index++) {
+      files[`src/components/Part${index}.tsx`] = `export const Part${index} = () => null\n`
+    }
+
+    const { result, fetch } = await run({ routes: githubRoutes({ files }), githubToken: 'test-token' })
+
+    expect(fetch.calls.filter((call) => call.url.startsWith(RAW))).toHaveLength(0)
+    expect(fetch.calls.filter((call) => call.url === 'https://api.github.com/graphql')).toHaveLength(3)
+    expect(result.failed).toBe(0)
+  })
+
+  it('without a token reads only the first files and says which rows it could not check', async () => {
+    const files = { ...CLEAN_REPO }
+    for (let index = 0; index < 30; index++) {
+      files[`src/components/Part${index}.tsx`] = `export const Part${index} = () => null\n`
+    }
+
+    const { result, fetch } = await run({ routes: githubRoutes({ files }) })
+    const titles = result.checks.filter((check) => check.title.startsWith('Could not check')).map((check) => check.id)
+
+    expect(fetch.calls.filter((call) => call.url.startsWith(RAW))).toHaveLength(15)
+    expect(fetch.calls.some((call) => call.url === 'https://api.github.com/graphql')).toBe(false)
+    expect(titles).toEqual(expect.arrayContaining(['G6', 'G12']))
+    expect(result.checks.find((check) => check.id === 'G6').status).not.toBe('pass')
+  })
+
+  it('stays within 45 requests on a big repo and says which rows it could not check', async () => {
+    const names = Array.from({ length: 80 }, (_, index) => `pkg-${index}`)
+    const files = {
+      'package.json': JSON.stringify({
+        name: 'big',
+        scripts: { test: 'vitest run' },
+        dependencies: Object.fromEntries(names.map((name) => [name, '^1.0.0'])),
+      }),
+      'package-lock.json': JSON.stringify({
+        lockfileVersion: 3,
+        packages: Object.fromEntries(names.map((name) => [`node_modules/${name}`, { version: '1.0.0' }])),
+      }),
+      ...Object.fromEntries(Array.from({ length: 320 }, (_, index) => [`src/pages/Page${index}.tsx`, 'export const a = 1'])),
+    }
+    const osvResults = Object.fromEntries(names.slice(0, 20).map((name) => [name, { vulns: [{ id: `GHSA-${name}` }] }]))
+    const routes = {
+      ...githubRoutes({ files }),
+      ...registryRoutes({
+        osvResults,
+        latest: Object.fromEntries(names.map((name) => [name, '1.0.0'])),
+        vulns: Object.fromEntries(names.map((name) => [`GHSA-${name}`, 'HIGH'])),
+      }),
+    }
+
+    for (const githubToken of ['test-token', undefined]) {
+      const { result, fetch } = await run({ routes, githubToken })
+      const row = (id) => result.checks.find((check) => check.id === id)
+
+      expect(result.error ?? null).toBe(null)
+      expect(fetch.calls.length).toBeLessThanOrEqual(45)
+      expect(fetch.calls.filter((call) => call.url.startsWith('https://registry.npmjs.org/')).length).toBeLessThanOrEqual(20)
+      expect(fetch.calls.filter((call) => call.url.startsWith('https://api.osv.dev/v1/vulns/')).length).toBeLessThanOrEqual(5)
+      expect(row('G11').title).toBe('Could not check all package versions')
+      expect(row('G11').status).not.toBe('pass')
+    }
   })
 
   it('returns private_repo for a private repo', async () => {

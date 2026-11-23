@@ -1,9 +1,17 @@
 import { CheckError } from './errors.js'
+import { readCapped } from './guarded-fetch.js'
 import { findSecretKeys, hasPublicSupabaseKey } from './secrets.js'
 
 export const MAX_BUNDLE_BYTES = 8 * 1024 * 1024
+export const MAX_SCRIPTS = 15
+const MAX_PAGE_BYTES = 2 * 1024 * 1024
+const MAX_SCRIPT_BYTES = 4 * 1024 * 1024
+const MAX_PROBE_BYTES = 64 * 1024
+const MAX_MAP_SNIFF_BYTES = 1024
+const SCRIPT_CONCURRENCY = 2
 const MAX_REDIRECTS = 4
-const MAX_MAP_PROBES = 3
+const MAX_MAP_PROBES = 10
+const UNCHECKED_WHY = 'Part of the site did not answer or was too big to read within the limits of the free check. Run it again in a minute.'
 const ERROR_TRACKER_MARKERS = /ingest\.(?:[a-z]{2}\.)?sentry\.io|sentry\.javascript|__SENTRY__|bugsnag|logrocket|posthog|highlight\.run|datadoghq-browser|rollbar/i
 const BUILDER_LABELS = [
   {
@@ -29,13 +37,14 @@ export async function runLiveChecks({ target, fetch }) {
       path: '/',
       text: page.html,
     },
-    ...scripts,
+    ...scripts.loaded,
   ]
   const [sourceMaps, exposedFiles] = await Promise.all([
-    findSourceMaps({ scripts: scripts.filter((script) => script.isEntry), fetch }),
+    findSourceMaps({ scripts: scripts.loaded.filter((script) => script.isEntry), fetch }),
     findExposedFiles({ origin: page.origin, fetch }),
   ])
   const allText = texts.map((item) => item.text).join('\n')
+  const hasAllText = page.isComplete && scripts.isComplete
   const labels = BUILDER_LABELS.filter(({ marker }) => marker.test(allText) || marker.test(page.host)).map(({ label }) => label)
   if (PAYMENT_MARKERS.test(allText)) {
     labels.push('Takes payments')
@@ -44,10 +53,10 @@ export async function runLiveChecks({ target, fetch }) {
     name: page.host,
     labels,
     checks: [
-      checkSecretKeys({ texts }),
+      checkSecretKeys({ texts, hasAllText }),
       checkExposedFiles({ exposedFiles }),
-      checkErrorTracking({ allText }),
-      checkSourceMaps({ sourceMaps }),
+      checkErrorTracking({ allText, hasAllText }),
+      checkSourceMaps({ sourceMaps, hasAllEntries: page.isComplete && scripts.hasAllEntries }),
       checkHeaders({ page }),
     ],
   }
@@ -75,52 +84,66 @@ async function loadPage({ url, fetch }) {
       throw new CheckError('upstream', `The site answered with an error (${response.status}).`)
     }
     const finalUrl = new URL(current)
+    const body = await readCapped({ response, maxBytes: MAX_PAGE_BYTES })
     return {
       url: finalUrl.href,
       origin: finalUrl.origin,
       host: finalUrl.host,
       isHttps: finalUrl.protocol === 'https:',
       headers: response.headers,
-      html: await response.text(),
+      html: body.text,
+      isComplete: body.isComplete,
     }
   }
   throw new CheckError('upstream', 'The site redirects too many times.')
 }
 
+// A script that could not be read, or one past the caps, leaves the result incomplete.
 async function loadScripts({ page, fetch }) {
   const entries = findEntryScripts({ html: page.html, base: page.url, origin: page.origin })
   const loaded = []
-  const seen = new Set(entries)
-  let budget = MAX_BUNDLE_BYTES
-  async function load({ urls, isEntry }) {
-    const results = await Promise.all(
-      urls.map(async (url) => {
-        try {
-          const response = await fetch(url)
-          if (!response.ok || isHtml(response)) {
-            return null
-          }
-          const declared = Number(response.headers.get('content-length') ?? 0)
-          if (declared > budget) {
-            return null
-          }
-          const text = await response.text()
-          budget -= text.length
-          return budget < 0 ? null : { path: new URL(url).pathname.slice(1), url, text, isEntry }
-        } catch (error) {
-          if (error?.name === 'AbortError') {
-            throw error
-          }
-          return null
-        }
-      }),
-    )
-    const ok = results.filter(Boolean)
-    loaded.push(...ok)
-    return ok
+  let bytesLeft = MAX_BUNDLE_BYTES
+  let isComplete = entries.length <= MAX_SCRIPTS
+  async function loadOne({ url, isEntry }) {
+    const reserved = Math.min(bytesLeft, MAX_SCRIPT_BYTES)
+    if (reserved <= 0) {
+      isComplete = false
+      return
+    }
+    bytesLeft -= reserved
+    let kept = 0
+    try {
+      const response = await fetch(url)
+      if (response.status === 404 || response.status === 410 || isHtml(response)) {
+        await response.body?.cancel()
+        return
+      }
+      if (!response.ok) {
+        await response.body?.cancel()
+        isComplete = false
+        return
+      }
+      const body = await readCapped({ response, maxBytes: reserved })
+      if (!body.isComplete) {
+        isComplete = false
+        return
+      }
+      kept = body.text.length
+      loaded.push({ path: new URL(url).pathname.slice(1), url, text: body.text, isEntry })
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        throw error
+      }
+      isComplete = false
+    } finally {
+      bytesLeft += reserved - kept
+    }
   }
-  const entryScripts = await load({ urls: entries, isEntry: true })
-  const lazy = entryScripts
+  const entryUrls = entries.slice(0, MAX_SCRIPTS)
+  await forEachLimit({ items: entryUrls, limit: SCRIPT_CONCURRENCY, run: (url) => loadOne({ url, isEntry: true }) })
+  const hasAllEntries = isComplete
+  const seen = new Set(entries)
+  const lazy = loaded
     .flatMap((script) => findLazyChunks({ script, origin: page.origin }))
     .filter((url) => {
       if (seen.has(url)) {
@@ -129,8 +152,16 @@ async function loadScripts({ page, fetch }) {
       seen.add(url)
       return true
     })
-  await load({ urls: lazy, isEntry: false })
-  return loaded
+  const room = MAX_SCRIPTS - entryUrls.length
+  if (lazy.length > room) {
+    isComplete = false
+  }
+  await forEachLimit({ items: lazy.slice(0, room), limit: SCRIPT_CONCURRENCY, run: (url) => loadOne({ url, isEntry: false }) })
+  return {
+    loaded,
+    isComplete,
+    hasAllEntries,
+  }
 }
 
 function findEntryScripts({ html, base, origin }) {
@@ -160,21 +191,43 @@ function findLazyChunks({ script, origin }) {
   })
 }
 
+// Exposure is decided by the HEAD answer; a server without HEAD gets a GET read up to 1 KB.
 async function findSourceMaps({ scripts, fetch }) {
   const probes = scripts.slice(0, MAX_MAP_PROBES).map(async (script) => {
     const mapUrl = `${script.url}.map`
     try {
-      let response = await fetch(mapUrl, { method: 'HEAD' })
-      if (response.status === 405 || response.status === 501) {
-        response = await fetch(mapUrl)
-        return response.ok && !isHtml(response) && (await response.text()).trimStart().startsWith('{') ? `${script.path}.map` : null
+      const head = await fetch(mapUrl, { method: 'HEAD' })
+      if (head.status !== 405 && head.status !== 501) {
+        return {
+          path: head.ok && !isHtml(head) ? `${script.path}.map` : null,
+          isAnswered: true,
+        }
       }
-      return response.ok && !isHtml(response) ? `${script.path}.map` : null
+      const response = await fetch(mapUrl)
+      if (!response.ok || isHtml(response)) {
+        await response.body?.cancel()
+        return {
+          path: null,
+          isAnswered: true,
+        }
+      }
+      const { text } = await readCapped({ response, maxBytes: MAX_MAP_SNIFF_BYTES })
+      return {
+        path: text.trimStart().startsWith('{') ? `${script.path}.map` : null,
+        isAnswered: true,
+      }
     } catch {
-      return null
+      return {
+        path: null,
+        isAnswered: false,
+      }
     }
   })
-  return (await Promise.all(probes)).filter(Boolean)
+  const results = await Promise.all(probes)
+  return {
+    found: results.map((result) => result.path).filter(Boolean),
+    isComplete: scripts.length <= MAX_MAP_PROBES && results.every((result) => result.isAnswered),
+  }
 }
 
 // A single-page app answers every path with its HTML; only real file content counts.
@@ -194,21 +247,34 @@ async function findExposedFiles({ origin, fetch }) {
       try {
         const response = await fetch(`${origin}/${path}`, { redirect: 'manual' })
         if (!response.ok || isHtml(response)) {
-          return null
+          await response.body?.cancel()
+          return {
+            path: null,
+            isAnswered: true,
+          }
         }
-        const text = await response.text()
-        return !text.trimStart().startsWith('<') && looksReal(text) ? path : null
+        const { text } = await readCapped({ response, maxBytes: MAX_PROBE_BYTES })
+        return {
+          path: !text.trimStart().startsWith('<') && looksReal(text) ? path : null,
+          isAnswered: true,
+        }
       } catch {
-        return null
+        return {
+          path: null,
+          isAnswered: false,
+        }
       }
     }),
   )
-  return results.filter(Boolean)
+  return {
+    found: results.map((result) => result.path).filter(Boolean),
+    isComplete: results.every((result) => result.isAnswered),
+  }
 }
 // #endregion
 
 // #region checks
-function checkSecretKeys({ texts }) {
+function checkSecretKeys({ texts, hasAllText }) {
   const hit = texts
     .map((item) => {
       return {
@@ -228,6 +294,9 @@ function checkSecretKeys({ texts }) {
       tag: 'week',
     }
   }
+  if (!hasAllText) {
+    return unchecked({ id: 'U1', title: 'Could not check browser code for secret keys' })
+  }
   const hasPublicKey = texts.some((item) => hasPublicSupabaseKey(item.text))
   return {
     id: 'U1',
@@ -241,16 +310,20 @@ function checkSecretKeys({ texts }) {
 }
 
 function checkExposedFiles({ exposedFiles }) {
-  if (exposedFiles.length > 0) {
+  const { found } = exposedFiles
+  if (found.length > 0) {
     return {
       id: 'U4',
       status: 'fail',
-      title: exposedFiles[0] === '.env' ? 'Your settings file is public' : 'Your code history is public',
-      where: `/${exposedFiles.join(', /')}`,
+      title: found[0] === '.env' ? 'Your settings file is public' : 'Your code history is public',
+      where: `/${found.join(', /')}`,
       fix: '1 h',
       why: 'Anyone can download this file from your site. Settings files often hold private keys.',
       tag: 'week',
     }
+  }
+  if (!exposedFiles.isComplete) {
+    return unchecked({ id: 'U4', title: 'Could not check for public settings files' })
   }
   return {
     id: 'U4',
@@ -263,7 +336,7 @@ function checkExposedFiles({ exposedFiles }) {
   }
 }
 
-function checkErrorTracking({ allText }) {
+function checkErrorTracking({ allText, hasAllText }) {
   if (ERROR_TRACKER_MARKERS.test(allText)) {
     return {
       id: 'U2',
@@ -274,6 +347,9 @@ function checkErrorTracking({ allText }) {
       why: null,
       tag: null,
     }
+  }
+  if (!hasAllText) {
+    return unchecked({ id: 'U2', title: 'Could not check crash reporting' })
   }
   return {
     id: 'U2',
@@ -286,17 +362,20 @@ function checkErrorTracking({ allText }) {
   }
 }
 
-function checkSourceMaps({ sourceMaps }) {
-  if (sourceMaps.length > 0) {
+function checkSourceMaps({ sourceMaps, hasAllEntries }) {
+  if (sourceMaps.found.length > 0) {
     return {
       id: 'U3',
       status: 'warn',
       title: 'Source code public',
-      where: sourceMaps[0],
+      where: sourceMaps.found[0],
       fix: '1 h',
       why: 'Anyone can download your full source code, comments included, and read how every part works.',
       tag: 'week',
     }
+  }
+  if (!hasAllEntries || !sourceMaps.isComplete) {
+    return unchecked({ id: 'U3', title: 'Could not check for public source code' })
   }
   return {
     id: 'U3',
@@ -337,6 +416,28 @@ function checkHeaders({ page }) {
   }
 }
 // #endregion
+
+function unchecked({ id, title }) {
+  return {
+    id,
+    status: 'warn',
+    title,
+    where: null,
+    fix: null,
+    why: UNCHECKED_WHY,
+    tag: null,
+  }
+}
+
+async function forEachLimit({ items, limit, run }) {
+  let next = 0
+  async function worker() {
+    while (next < items.length) {
+      await run(items[next++])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+}
 
 function isHtml(response) {
   return /text\/html/i.test(response.headers.get('content-type') ?? '')

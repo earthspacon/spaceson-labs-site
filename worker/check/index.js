@@ -1,12 +1,12 @@
 import { CheckError, toErrorResult } from './errors.js'
-import { createGuardedFetch } from './guarded-fetch.js'
+import { createCountedFetch, createGuardedFetch, createRedirectFollowingFetch } from './guarded-fetch.js'
 import { runLiveChecks } from './live-checks.js'
 import { runRepoChecks } from './repo-checks.js'
 import { openGithubRepo } from './sources/github.js'
 import { parseTarget } from './target.js'
 
 export { ERROR_STATUS } from './errors.js'
-export { FORBIDDEN_PATHS, ForbiddenRequestError, createGuardedFetch } from './guarded-fetch.js'
+export { FORBIDDEN_PATHS, ForbiddenRequestError, MAX_SUBREQUESTS, createGuardedFetch } from './guarded-fetch.js'
 export { parseTarget } from './target.js'
 
 const STATUS_ORDER = {
@@ -22,9 +22,11 @@ export async function runCheck(target, { fetch, githubToken, now = Date.now, tim
     return toErrorResult(new CheckError('bad_target'))
   }
   const controller = new AbortController()
-  const guardedFetch = createGuardedFetch({
-    fetch,
-    signal: controller.signal,
+  const guardedFetch = createRedirectFollowingFetch({
+    fetch: createGuardedFetch({
+      fetch: createCountedFetch({ fetch }),
+      signal: controller.signal,
+    }),
   })
   const startedAt = now()
   let timer

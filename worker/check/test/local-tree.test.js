@@ -9,7 +9,7 @@ describe('localTree', () => {
     const source = await localTree({ dir: DIR, name: 'tiny' }).open({ now: () => 0 })
 
     expect(source.files.map((file) => file.path).sort()).toEqual(['package.json', 'src/a.ts'])
-    expect(await source.readText('src/a.ts')).toBe('export const a = 1\n')
+    expect((await source.readFiles({ paths: [{ path: 'src/a.ts' }] })).get('src/a.ts')).toBe('export const a = 1\n')
   })
 
   it('reports no commit for a folder that is not its own repo', async () => {

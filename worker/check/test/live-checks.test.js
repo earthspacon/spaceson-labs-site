@@ -320,3 +320,129 @@ describe('live mode errors and limits', () => {
     expect(result.ms).toBe(100)
   })
 })
+
+function endlessStream({ chunk = 'a'.repeat(64 * 1024), limitBytes = Infinity } = {}) {
+  let sent = 0
+  return new ReadableStream({
+    pull(controller) {
+      if (sent >= limitBytes) {
+        controller.close()
+        return
+      }
+      sent += chunk.length
+      controller.enqueue(new TextEncoder().encode(chunk))
+    },
+  })
+}
+
+describe('live mode redirects on sub-requests', () => {
+  const targets = ['/rest/v1/x', 'https://other.host/']
+
+  for (const location of targets) {
+    it(`never follows a script or map redirect to ${location}`, async () => {
+      const { fetch, row } = await checkSite(
+        siteRoutes({
+          entry: `${SENTRY};import("./Lazy-a1.js")`,
+          extra: {
+            [`${ORIGIN}/assets/Lazy-a1.js`]: () => respondRedirect(location),
+            [`HEAD ${ORIGIN}/assets/index-abc.js.map`]: () => respondRedirect(location),
+            [`${ORIGIN}/.env`]: () => respondRedirect(location),
+          },
+        }),
+      )
+
+      expect(fetch.calls.some((call) => call.url.includes('/rest/v1') || call.url.includes('other.host'))).toBe(false)
+      expect(fetch.calls.every((call) => call.init.redirect === 'manual')).toBe(true)
+      expect(row('U1').title).toMatch(/^Could not check/)
+      expect(row('U3').status).not.toBe('fail')
+      expect(row('U4').status).not.toBe('fail')
+    })
+  }
+
+  it('follows a same-origin script redirect', async () => {
+    const { row } = await checkSite(
+      siteRoutes({
+        entry: `${SENTRY};import("./Lazy-a1.js")`,
+        extra: {
+          [`${ORIGIN}/assets/Lazy-a1.js`]: () => respondRedirect('/assets/Lazy-b2.js'),
+          [`${ORIGIN}/assets/Lazy-b2.js`]: {
+            body: `const k="${makeJwt({ role: 'service_role' })}"`,
+            headers: JS,
+          },
+        },
+      }),
+    )
+
+    expect(row('U1').status).toBe('fail')
+  })
+})
+
+function respondRedirect(location) {
+  return new Response(null, {
+    status: 302,
+    headers: { location },
+  })
+}
+
+describe('live mode body and script caps', () => {
+  it('finishes on an endless page with no length', async () => {
+    const fetch = fakeFetch({
+      routes: {
+        [`${ORIGIN}/`]: () => new Response(endlessStream(), { headers: SAFE_HEADERS }),
+      },
+    })
+
+    const result = await runCheck(`${ORIGIN}/`, { fetch, timeoutMs: 5000 })
+
+    expect(result.error ?? null).toBe(null)
+    expect(result.checks.find((check) => check.id === 'U1').title).toMatch(/^Could not check/)
+  })
+
+  it('finishes on a 50 MB script with no length and fetches at most 15 scripts', async () => {
+    const lazy = Array.from({ length: 40 }, (_, index) => `import("./Chunk-${index}.js")`).join(';')
+    const extra = Object.fromEntries(
+      Array.from({ length: 40 }, (_, index) => {
+        return [
+          `${ORIGIN}/assets/Chunk-${index}.js`,
+          () => new Response(endlessStream({ limitBytes: 50 * 1024 * 1024 }), { headers: JS }),
+        ]
+      }),
+    )
+    const fetch = fakeFetch({ routes: siteRoutes({ entry: `${SENTRY};${lazy}`, extra }) })
+
+    const result = await runCheck(`${ORIGIN}/`, { fetch, timeoutMs: 5000 })
+    const scripts = fetch.calls.filter((call) => call.method === 'GET' && call.url.endsWith('.js'))
+
+    expect(scripts.length).toBeLessThanOrEqual(15)
+    expect(result.checks.find((check) => check.id === 'U1').title).toMatch(/^Could not check/)
+    expect(result.checks.find((check) => check.id === 'U1').status).not.toBe('pass')
+  })
+
+  it('reads could not check for settings files when a probe throws', async () => {
+    const { row } = await checkSite(
+      siteRoutes({
+        entry: SENTRY,
+        extra: {
+          [`${ORIGIN}/.env`]: () => {
+            throw new TypeError('network down')
+          },
+        },
+      }),
+    )
+
+    expect(row('U4')).toMatchObject({
+      status: 'warn',
+      title: 'Could not check for public settings files',
+    })
+  })
+
+  it('stays within the request budget on a site with many chunks', async () => {
+    const lazy = Array.from({ length: 60 }, (_, index) => `import("./C-${index}.js")`).join(';')
+    const extra = Object.fromEntries(
+      Array.from({ length: 60 }, (_, index) => [`${ORIGIN}/assets/C-${index}.js`, { body: 'x', headers: JS }]),
+    )
+    const { fetch } = await checkSite(siteRoutes({ entry: `${SENTRY};${lazy}`, extra }))
+
+    expect(fetch.calls.length).toBeLessThanOrEqual(45)
+  })
+})

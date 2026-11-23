@@ -5,9 +5,9 @@ import { readMigrations } from './sql.js'
 export const MAX_MIGRATIONS = 50
 export const MAX_FETCH_BYTES = 8 * 1024 * 1024
 const MAX_FILE_BYTES = 1024 * 1024
-const READ_CONCURRENCY = 16
-const MAX_DEPENDENCIES = 80
-const MAX_VULN_DETAILS = 10
+const REGISTRY_CONCURRENCY = 10
+export const MAX_DEPENDENCIES = 20
+const MAX_VULN_DETAILS = 5
 const BIG_FILE_WARN_LINES = 600
 const BIG_FILE_FAIL_LINES = 1000
 
@@ -27,15 +27,75 @@ const PLACEHOLDER_ASSERT = /expect\(\s*true\s*\)\.toBe\(\s*true\s*\)/g
 const ANY_ASSERT = /\bexpect\s*\(|\bassert[.(]/g
 const PUBLIC_ENV_NAME = /^(?:VITE_|NEXT_PUBLIC_|EXPO_PUBLIC_|PUBLIC_|REACT_APP_)?SUPABASE_(?:URL|ANON_KEY|PUBLISHABLE_KEY|PUBLISHABLE_DEFAULT_KEY|PROJECT_ID)$/
 const BROWSER_ENV_PREFIX = /^(?:VITE_|NEXT_PUBLIC_|EXPO_PUBLIC_|PUBLIC_|REACT_APP_)/
+const UNREAD_WHY = 'We could not read every file this check needs within the limits of the free check. Run it again in a minute.'
+
+// When a file a check needs was not read, these results could be wrong, so the row says "could not check".
+const NEEDS_FILES = {
+  G4: {
+    title: 'Could not check table row rules',
+    needs: (path) => MIGRATION_FILE.test(path),
+    statuses: ['pass', 'warn', 'fail'],
+  },
+  G5: {
+    title: 'Could not check open write rules',
+    needs: (path) => MIGRATION_FILE.test(path),
+    statuses: ['pass', 'warn', 'fail'],
+  },
+  G6: {
+    title: 'Could not check browser code for secret keys',
+    needs: (path) => isBrowserCode(path),
+    statuses: ['pass'],
+  },
+  G7: {
+    title: 'Could not check committed settings',
+    needs: (path) => ENV_FILE.test(path),
+    statuses: ['pass'],
+  },
+  G8: {
+    title: 'Could not check payment tests',
+    needs: (path) => CODE_FILE.test(path),
+    statuses: ['pass', 'fail'],
+  },
+  G10: {
+    title: 'Could not check packages for known bugs',
+    needs: (path) => LOCKFILES.includes(path),
+    statuses: ['pass', 'warn', 'fail'],
+  },
+  G3: {
+    title: 'Could not check crash reporting',
+    needs: (path) => path === 'package.json',
+    statuses: ['pass', 'fail'],
+  },
+  G11: {
+    title: 'Could not check package versions',
+    needs: (path) => path === 'package.json',
+    statuses: ['pass', 'warn'],
+  },
+  G2: {
+    title: 'Could not check what runs before deploy',
+    needs: (path) => WORKFLOW_FILE.test(path),
+    statuses: ['warn', 'fail'],
+  },
+  G12: {
+    title: 'Could not check file sizes',
+    needs: (path) => isBrowserCode(path) && !GENERATED_FILE.test(path),
+    statuses: ['pass'],
+  },
+  G13: {
+    title: 'Could not check type settings',
+    needs: (path) => ROOT_TSCONFIG.test(path),
+    statuses: ['pass', 'warn'],
+  },
+}
 
 export async function runRepoChecks({ source, fetch }) {
-  const files = await readRelevantFiles({ source })
+  const { files, unread } = await readRelevantFiles({ source })
   const pkg = parseJson(files.get('package.json'))
   const [vulnerable, outdated] = await Promise.all([
     checkVulnerablePackages({ files, fetch }),
     checkOutdatedMajors({ pkg, fetch }),
   ])
-  return [
+  const checks = [
     checkTables({ files }),
     checkSecretKeys({ files }),
     checkOpenPolicies({ files }),
@@ -50,47 +110,54 @@ export async function runRepoChecks({ source, fetch }) {
     outdated,
     checkSchemaInRepo({ tree: source.files }),
   ]
+  return checks.map((check) => markUnread({ check, unread }))
+}
+
+function markUnread({ check, unread }) {
+  const rule = NEEDS_FILES[check.id]
+  if (!rule || !rule.statuses.includes(check.status) || !unread.some((path) => rule.needs(path))) {
+    return check
+  }
+  return warn({
+    id: check.id,
+    title: rule.title,
+    why: UNREAD_WHY,
+  })
 }
 
 // #region reading
 async function readRelevantFiles({ source }) {
-  const paths = pickPaths(source.files)
-  const files = new Map()
+  const { picked, capped } = pickPaths(source.files)
   let budget = MAX_FETCH_BYTES
-  const queue = paths.filter((file) => {
+  const queue = picked.filter((file) => {
     if (file.size > MAX_FILE_BYTES || file.size > budget) {
       return false
     }
     budget -= file.size
     return true
   })
-  let next = 0
-  async function worker() {
-    while (next < queue.length) {
-      const { path } = queue[next++]
-      const text = await source.readText(path)
-      if (text !== null) {
-        files.set(path, text)
-      }
-    }
+  const read = await source.readFiles({ paths: queue })
+  const files = new Map([...read.entries()].sort(([a], [b]) => a.localeCompare(b)))
+  const unread = [...picked.filter((file) => !files.has(file.path)), ...capped].map((file) => file.path)
+  return {
+    files,
+    unread,
   }
-  await Promise.all(Array.from({ length: READ_CONCURRENCY }, worker))
-  return new Map([...files.entries()].sort(([a], [b]) => a.localeCompare(b)))
 }
 
 function pickPaths(tree) {
   const lockfile = LOCKFILES.map((name) => tree.find((file) => file.path === name)).find(Boolean)
-  const migrations = tree
-    .filter((file) => MIGRATION_FILE.test(file.path))
-    .sort((a, b) => a.path.localeCompare(b.path))
-    .slice(0, MAX_MIGRATIONS)
+  const migrations = tree.filter((file) => MIGRATION_FILE.test(file.path)).sort((a, b) => a.path.localeCompare(b.path))
   const config = tree.filter((file) => {
     return file.path === 'package.json' || ROOT_TSCONFIG.test(file.path) || WORKFLOW_FILE.test(file.path) || ENV_FILE.test(file.path)
   })
   const code = tree
     .filter((file) => CODE_FILE.test(file.path) && !file.path.includes('node_modules/'))
     .sort((a, b) => Number(TEST_FILE.test(b.path)) - Number(TEST_FILE.test(a.path)))
-  return [...config, ...(lockfile ? [lockfile] : []), ...migrations, ...code]
+  return {
+    picked: [...config, ...(lockfile ? [lockfile] : []), ...migrations.slice(0, MAX_MIGRATIONS), ...code],
+    capped: migrations.slice(MAX_MIGRATIONS),
+  }
 }
 // #endregion
 
@@ -113,7 +180,7 @@ function checkTables({ files }) {
 
 function checkSecretKeys({ files }) {
   const hits = [...files.entries()]
-    .filter(([path]) => path.startsWith('src/') && CODE_FILE.test(path) && !TEST_FILE.test(path))
+    .filter(([path]) => isBrowserCode(path))
     .flatMap(([path, text]) => {
       return findSecretKeys(text).map((hit) => {
         return {
@@ -336,7 +403,7 @@ function checkWorkflows({ files }) {
 
 function checkBigFiles({ files }) {
   const big = [...files.entries()]
-    .filter(([path]) => path.startsWith('src/') && CODE_FILE.test(path) && !GENERATED_FILE.test(path) && !TEST_FILE.test(path))
+    .filter(([path]) => isBrowserCode(path) && !GENERATED_FILE.test(path))
     .map(([path, text]) => {
       return {
         path,
@@ -397,7 +464,7 @@ function checkTypeChecks({ files, tree }) {
 }
 
 async function checkOutdatedMajors({ pkg, fetch }) {
-  const declared = Object.entries({ ...pkg?.dependencies, ...pkg?.devDependencies })
+  const declared = [...Object.entries(pkg?.dependencies ?? {}), ...Object.entries(pkg?.devDependencies ?? {})]
     .map(([name, range]) => {
       return {
         name,
@@ -405,12 +472,12 @@ async function checkOutdatedMajors({ pkg, fetch }) {
       }
     })
     .filter((dep) => dep.major !== null)
-    .slice(0, MAX_DEPENDENCIES)
+  const checked = declared.slice(0, MAX_DEPENDENCIES)
   let latest
   try {
     latest = await mapLimit({
-      items: declared,
-      limit: READ_CONCURRENCY,
+      items: checked,
+      limit: REGISTRY_CONCURRENCY,
       run: (dep) => readLatestMajor({ name: dep.name, fetch }),
     })
   } catch {
@@ -420,7 +487,7 @@ async function checkOutdatedMajors({ pkg, fetch }) {
       why: 'The package registry did not answer. Run the check again in a minute.',
     })
   }
-  const behind = declared
+  const behind = checked
     .map((dep, index) => {
       return {
         ...dep,
@@ -429,6 +496,13 @@ async function checkOutdatedMajors({ pkg, fetch }) {
     })
     .filter((dep) => dep.behind >= 2)
     .sort((a, b) => b.behind - a.behind)
+  if (behind.length === 0 && checked.length < declared.length) {
+    return warn({
+      id: 'G11',
+      title: 'Could not check all package versions',
+      why: `${checked.length} of ${declared.length} packages checked, none is 2+ major versions behind. The free check looks up at most ${MAX_DEPENDENCIES}.`,
+    })
+  }
   if (behind.length === 0) {
     return pass({ id: 'G11', title: 'Dependencies within 1 major' })
   }
@@ -463,6 +537,10 @@ function checkSchemaInRepo({ tree }) {
 // #endregion
 
 // #region helpers
+function isBrowserCode(path) {
+  return path.startsWith('src/') && CODE_FILE.test(path) && !TEST_FILE.test(path)
+}
+
 function findPaymentUnits({ files, tree }) {
   const units = new Map()
   for (const file of tree) {

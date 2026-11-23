@@ -21,8 +21,12 @@ export function memoryTree({ files, name = 'fixture', commit = 'abc1234' }) {
             size: text.length,
           }
         }),
-        async readText(path) {
-          return files[path] ?? null
+        async readFiles({ paths }) {
+          return new Map(
+            paths.flatMap(({ path }) => {
+              return path in files ? [[path, files[path]]] : []
+            }),
+          )
         },
       }
     },
@@ -51,7 +55,8 @@ export function fakeFetch({ routes = {}, onRequest } = {}) {
     if (!route) {
       return respond({ status: 404, body: 'not found' })
     }
-    return respond(typeof route === 'function' ? await route(init) : route)
+    const spec = typeof route === 'function' ? await route(init) : route
+    return spec instanceof Response ? spec : respond(spec)
   }
   fetch.calls = calls
   return fetch

@@ -14,12 +14,16 @@ export function localTree({ dir, name }) {
         commit: readGit({ dir, args: ['rev-parse', '--short=7', 'HEAD'] }),
         info: readInfo({ dir, now }),
         files,
-        async readText(path) {
-          try {
-            return readFileSync(join(dir, path), 'utf8')
-          } catch {
-            return null
-          }
+        async readFiles({ paths }) {
+          return new Map(
+            paths.flatMap(({ path }) => {
+              try {
+                return [[path, readFileSync(join(dir, path), 'utf8')]]
+              } catch {
+                return []
+              }
+            }),
+          )
         },
       }
     },
