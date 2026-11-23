@@ -1,12 +1,14 @@
 const GITHUB_HOSTS = new Set(['github.com', 'www.github.com'])
 const NAME_PATTERN = /^[A-Za-z0-9_.-]+$/
+const MAX_TARGET_LENGTH = 2048
+const IPV4_PATTERN = /^\d+\.\d+\.\d+\.\d+$/
 
 export function parseTarget(input) {
   if (typeof input !== 'string') {
     return null
   }
   const trimmed = input.trim()
-  if (!trimmed || /\s/.test(trimmed)) {
+  if (!trimmed || trimmed.length > MAX_TARGET_LENGTH || /\s/.test(trimmed)) {
     return null
   }
   const hasScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)
@@ -20,7 +22,7 @@ export function parseTarget(input) {
     return null
   }
   const host = url.hostname.toLowerCase()
-  if (!host.includes('.') && host !== 'localhost') {
+  if (!host.includes('.') || isPrivateHost(host) || url.port) {
     return null
   }
   if (GITHUB_HOSTS.has(host)) {
@@ -36,9 +38,15 @@ export function parseTarget(input) {
   }
 }
 
+// The URL parser has already turned forms like 0x7f000001 into 127.0.0.1.
+function isPrivateHost(host) {
+  return host === 'localhost' || host.endsWith('.localhost') || host.startsWith('[') || IPV4_PATTERN.test(host)
+}
+
 function parseGithubPath(pathname) {
-  const [owner, rawRepo] = pathname.split('/').filter(Boolean)
-  const repo = rawRepo?.replace(/\.git$/, '')
+  const [rawOwner, rawRepo] = pathname.split('/').filter(Boolean)
+  const owner = rawOwner?.toLowerCase()
+  const repo = rawRepo?.replace(/\.git$/, '').toLowerCase()
   if (!owner || !repo || !NAME_PATTERN.test(owner) || !NAME_PATTERN.test(repo)) {
     return null
   }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CHECK_TIMEOUT_MS, createRateLimiter, handleCheck, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS } from "../api-check.js";
+import { CHECK_TIMEOUT_MS, createRateLimiter, handleCheck, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS, toLimitKey } from "../api-check.js";
 import worker from "../index.js";
 import { CLEAN_LATEST, CLEAN_REPO, fakeFetch, registryRoutes } from "../check/test/helpers.js";
 
@@ -125,6 +125,38 @@ describe("GET /api/check", () => {
     expect(statuses[10]).toBe(429);
     expect(otherIp.response.status).toBe(404);
     expect(afterWindow.response.status).toBe(404);
+  });
+
+  it("counts every address in one IPv6 /64 against the same limit", async () => {
+    const limiter = createRateLimiter({
+      max: RATE_LIMIT_MAX,
+      windowMs: RATE_LIMIT_WINDOW_MS,
+    });
+    const statuses = [];
+    for (let index = 0; index < 11; index += 1) {
+      const { response } = await check({ target: `github.com/acme/v6-${index}`, limiter, routes: {}, ip: `2001:db8:a:b::${index + 1}` });
+      statuses.push(response.status);
+    }
+    const otherNetwork = await check({ target: "github.com/acme/v6-other", limiter, routes: {}, ip: "2001:db8:a:c::1" });
+
+    expect(statuses[10]).toBe(429);
+    expect(otherNetwork.response.status).toBe(404);
+  });
+
+  it.each([
+    ["2001:db8:a:b::1", "2001:db8:a:b::/64"],
+    ["2001:0db8:000a:000b:1:2:3:4", "2001:db8:a:b::/64"],
+    ["2001:DB8::1", "2001:db8:0:0::/64"],
+    ["::1", "0:0:0:0::/64"],
+    ["203.0.113.7", "203.0.113.7"],
+  ])("keys %s on %s", (ip, key) => {
+    expect(toLimitKey(ip)).toBe(key);
+  });
+
+  it("caches a repo under its lowercase name", async () => {
+    const { cache } = await check({ target: "github.com/Acme/App" });
+
+    expect(cache.keys()).toEqual([`${SITE}/api/check?target=github.com%2Facme%2Fapp`]);
   });
 
   it.each(["POST", "PUT", "DELETE", "HEAD"])("returns 405 for %s", async (method) => {

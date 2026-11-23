@@ -19,17 +19,18 @@ export async function handleCheck({ request, env, ctx, cache, fetch, limiter }) 
       },
     });
   }
-  const parsed = parseTarget(new URL(request.url).searchParams.get("target"));
+  const url = new URL(request.url);
+  const parsed = parseTarget(url.searchParams.get("target"));
   if (!parsed) {
     return errorResponse(toErrorResult(new CheckError("bad_target")));
   }
-  const cacheKey = new Request(`${new URL(request.url).origin}/api/check?target=${encodeURIComponent(parsed.target)}`);
+  const cacheKey = new Request(`${url.origin}/api/check?target=${encodeURIComponent(parsed.target)}`);
   const cached = await cache.match(cacheKey);
   if (cached) {
     return cached;
   }
   const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
-  if (!limiter.allow(ip)) {
+  if (!limiter.allow(toLimitKey(ip))) {
     return errorResponse(toErrorResult(new CheckError("rate_limited")));
   }
   const result = await runCheck(parsed.target, {
@@ -47,6 +48,22 @@ export async function handleCheck({ request, env, ctx, cache, fetch, limiter }) 
   });
   ctx.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
+}
+
+// One IPv6 user usually holds a whole /64, so the limit counts the network, not the address.
+export function toLimitKey(ip) {
+  if (!ip.includes(":")) {
+    return ip;
+  }
+  const [head, tail = ""] = ip.toLowerCase().split("::");
+  const headParts = head ? head.split(":") : [];
+  const tailParts = ip.includes("::") && tail ? tail.split(":") : [];
+  const missing = Math.max(0, 8 - headParts.length - tailParts.length);
+  const parts = [...headParts, ...Array(missing).fill("0"), ...tailParts];
+  return `${parts
+    .slice(0, 4)
+    .map((part) => part.replace(/^0+(?=.)/, ""))
+    .join(":")}::/64`;
 }
 
 // Lives in one isolate only: each Cloudflare isolate keeps its own counts.

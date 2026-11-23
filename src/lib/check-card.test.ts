@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import sampleCheck from '../data/sample-check.json';
 import sampleLive from '../data/sample-check-live.json';
-import { type CheckResult, FAILED_LABEL, renderCheckCard, renderWhere } from './check-card';
+import { type CheckResult, detectTarget, FAILED_LABEL, renderCheckCard, renderWhere } from './check-card';
 
 const repo = sampleCheck as CheckResult;
 const live = sampleLive as CheckResult;
@@ -79,5 +79,14 @@ describe('renderWhere', () => {
     expect(renderWhere('assets/index-BdKGPZwx.js (service_role)')).toBe(
       '<span class="cc-file">assets/</span><wbr><span class="cc-file">index-BdKGPZwx.js</span> (service_role)',
     );
+  });
+});
+
+describe('detectTarget', () => {
+  it('follows the Worker rules', () => {
+    expect(detectTarget('github.com/Owner/Repo')).toEqual({ mode: 'repo', target: 'github.com/owner/repo' });
+    expect(detectTarget('my-app.lovable.app/x')).toEqual({ mode: 'live', target: 'https://my-app.lovable.app' });
+    expect(detectTarget('localhost:3000')).toBeNull();
+    expect(detectTarget('a.com:8080')).toBeNull();
   });
 });

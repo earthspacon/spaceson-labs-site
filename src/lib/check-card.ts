@@ -1,4 +1,5 @@
 // One renderer for the check card: Astro calls it at build time for the sample, the browser calls it for live results.
+import { parseTarget } from '../../worker/check/target.js';
 
 export type CheckStatus = 'fail' | 'warn' | 'pass';
 
@@ -79,29 +80,14 @@ const TAG_LABEL = {
   full: 'Part of the full job',
 } as const;
 
-const GITHUB_REPO = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[/?#].*)?$/i;
-const BARE_HOST = /^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?([/?#].*)?$/i;
-
 export function icon(name: keyof typeof ICONS) {
   return `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
 }
 
+// Same rules as the Worker, so the form never sends what the API would refuse.
 export function detectTarget(raw: string): CheckTarget {
-  const value = raw.trim();
-  const repo = value.match(GITHUB_REPO);
-  if (repo) {
-    return { mode: 'repo', target: `github.com/${repo[1]}/${repo[2]}` };
-  }
-  const hasScheme = /^https?:\/\//i.test(value);
-  if (!hasScheme && !BARE_HOST.test(value)) {
-    return null;
-  }
-  try {
-    const url = new URL(hasScheme ? value : `https://${value}`);
-    return { mode: 'live', target: url.origin };
-  } catch {
-    return null;
-  }
+  const parsed = parseTarget(raw);
+  return parsed ? { mode: parsed.mode, target: parsed.target } : null;
 }
 
 // `isSample` is for cards baked into the page: no relative time, so they do not age.
