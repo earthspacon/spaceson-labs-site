@@ -5,13 +5,17 @@ type Props = {
   product: Product;
   sizes: string;
   isEager?: boolean;
+  // Below 640 px, swap in the crop taken at phone width so the text stays readable.
+  hasPhone?: boolean;
 };
 
 const SCREEN_WIDTH = 1040;
-const SCREEN_HEIGHT = 650;
+const SCREEN_HEIGHT = 520;
+const PHONE_WIDTH = 480;
+const PHONE_HEIGHT = 600;
 const THEMES = ['dark', 'light'] as const;
 
-const { product, sizes, isEager = false } = Astro.props;
+const { product, sizes, isEager = false, hasPhone = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
@@ -21,19 +25,33 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <span class="screen-host">{product.host}</span>
   </div>
   {
-    THEMES.map((theme) => (
-      <img
-        class={`screen-img only-${theme}`}
-        src={`${base}work/hero-${product.slug}-${theme}.webp`}
-        srcset={`${base}work/hero-${product.slug}-${theme}.webp ${SCREEN_WIDTH}w, ${base}work/hero-${product.slug}-${theme}@2x.webp ${SCREEN_WIDTH * 2}w`}
-        sizes={sizes}
-        alt={product.alt}
-        width={SCREEN_WIDTH}
-        height={SCREEN_HEIGHT}
-        loading={isEager ? 'eager' : 'lazy'}
-        decoding="async"
-      />
-    ))
+    THEMES.map((theme) => {
+      const file = `${base}work/hero-${product.slug}`;
+      return (
+        <picture class={`only-${theme}`}>
+          {hasPhone && (
+            <source
+              media="(max-width: 639px)"
+              srcset={`${file}-phone-${theme}.webp ${PHONE_WIDTH}w, ${file}-phone-${theme}@2x.webp ${PHONE_WIDTH * 2}w`}
+              sizes="100vw"
+              width={PHONE_WIDTH}
+              height={PHONE_HEIGHT}
+            />
+          )}
+          <img
+            class="screen-img"
+            src={`${file}-${theme}.webp`}
+            srcset={`${file}-${theme}.webp ${SCREEN_WIDTH}w, ${file}-${theme}@2x.webp ${SCREEN_WIDTH * 2}w`}
+            sizes={sizes}
+            alt={product.alt}
+            width={SCREEN_WIDTH}
+            height={SCREEN_HEIGHT}
+            loading={isEager ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
+      );
+    })
   }
 </figure>
 

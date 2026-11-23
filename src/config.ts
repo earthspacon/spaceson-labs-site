@@ -23,7 +23,7 @@ export const HERO = {
   text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
   primary: 'Tell us the job',
   secondary: 'Free app check',
-  anchor: { text: 'Jobs start at', price: '$500' },
+  anchor: { text: 'Jobs start at', price: '$500', team: 'Who does the work' },
   workLabel: 'Our products, built and run by us',
 };
 

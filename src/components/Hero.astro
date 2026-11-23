@@ -18,8 +18,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         <a href={`${base}#check`} class="btn btn-ghost">{HERO.secondary}</a>
       </div>
 
-      <p class="hero-anchor mt-5 text-sm text-muted">
-        {HERO.anchor.text} <strong class="font-semibold text-ink">{HERO.anchor.price}</strong>
+      <p class="hero-anchor mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
+        <span>{HERO.anchor.text} <strong class="font-semibold text-ink">{HERO.anchor.price}</strong></span>
+        <a href={`${base}#team`} class="link inline-flex items-center gap-1.5">{HERO.anchor.team}<Fragment set:html={icon('arrow')} /></a>
       </p>
     </div>
 
@@ -27,7 +28,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <p class="mb-3 text-sm text-muted">{HERO.workLabel}</p>
       <div class="work">
         <a href={lead.url} class="work-item work-lead" target="_blank" rel="noopener">
-          <ProductScreen product={lead} sizes="(min-width: 1024px) 680px, 100vw" isEager />
+          <ProductScreen product={lead} sizes="(min-width: 1024px) 680px, 100vw" isEager hasPhone />
           <p class="work-caption">
             <strong>{lead.name}</strong> <span>{lead.tagline}</span> <span class="work-host">{lead.host}</span>
           </p>
@@ -63,12 +64,6 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
-  }
-
-  .work-item:not(.work-lead) :global(.screen-img) {
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    object-position: top;
   }
 
   .work-lead {
