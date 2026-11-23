@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
 @import './check-card.css';
 
 @theme inline {
@@ -14,14 +15,19 @@
   --color-warn: var(--warn);
   --color-pass: var(--pass);
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
   --container-page: 1200px;
-  --text-display: clamp(2.25rem, 1.35rem + 3.3vw, 4rem);
-  --text-display--line-height: 1.03;
-  --text-display--letter-spacing: -0.035em;
-  --text-h2: clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem);
-  --text-h2--line-height: 1.1;
+  /* Heading scale, about 1.333 apart at 1440: 64 / 44 / 26 / 20 px. */
+  --text-display: clamp(2.375rem, 1.5rem + 3.4vw, 4rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+  --text-h2: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
+  --text-h2--line-height: 1.05;
   --text-h2--letter-spacing: -0.025em;
+  --text-h3: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.015em;
 }
 
 :root {
@@ -59,6 +65,15 @@
 html {
   scroll-behavior: smooth;
   scrollbar-color: var(--line) var(--paper);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
 }
 
 body {
