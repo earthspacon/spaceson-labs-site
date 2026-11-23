@@ -50,7 +50,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         HOW.steps.map((step) => (
           <li class="flex items-center gap-2">
             <span class="text-pass" set:html={icon('pass')} />
-            {step.name}
+            {step.term}
           </li>
         ))
       }

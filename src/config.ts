@@ -23,7 +23,7 @@ export const HERO = {
   text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
   primary: 'Tell us the job',
   secondary: 'Free app check',
-  anchor: { text: 'Jobs start', price: 'from $500' },
+  anchor: { text: 'Jobs start at', price: '$500' },
   workLabel: 'Our products, built and run by us',
 };
 
@@ -68,7 +68,7 @@ export const SERVICES: Service[] = [
 ];
 
 export const SERVICES_NOTE =
-  'These are starting points. Every price is agreed in writing before we start, and it goes lower or higher with the job.';
+  'These are starting points. The real price goes lower or higher with the job, and you see it before we start.';
 
 export const OFFER = {
   title: 'Free app check',
@@ -86,37 +86,51 @@ export const OFFER = {
     ],
   },
   cta: 'Start with the fix',
-  sampleCaption: 'Sample result, our test app',
+  sampleCaption: 'Sample result',
 };
 
 export const HOW = {
   title: 'How we work',
-  intro: 'We work hard, and you can see it: every change lands where you can read it the day we make it.',
+  intro: 'What you get, step by step. Every change lands where you can read it the day we make it.',
+  // `term` is the short form the hero lists; `name` is the step heading here.
   steps: [
     {
-      name: 'Scope in writing',
-      text: 'What we build, what we leave out and one price, agreed before we start.',
+      term: 'Scope in writing',
+      when: 'Before we start',
+      name: 'A written scope and one price',
+      text: 'What we build, what we leave out and what it costs, agreed before any work.',
     },
     {
-      name: 'Paid by milestone',
+      term: 'Paid by milestone',
+      when: 'Each milestone',
+      name: 'A working build you can try',
       text: 'Each milestone has a fixed amount and ends with working code merged into your repo and a short note on what changed.',
     },
     {
-      name: 'Your repo from day one',
+      term: 'Your repo from day one',
+      when: 'Every change',
+      name: 'Code in your repo',
       text: 'You invite us and every change is a pull request you can read. There is nothing to hand over at the end.',
     },
     {
-      name: 'Stop any time',
+      term: 'Stop any time',
+      when: 'When you choose',
+      name: 'Stop and keep everything',
       text: 'Stop after any milestone. Finished work is already yours, and any developer can pick it up.',
     },
   ],
-  talk: 'Talk any time: email, your team chat or a call when it suits you. We reply fast.',
+  team: {
+    title: 'Who does the work',
+    text: 'A senior full-stack engineer who uses AI coding tools and reviews every line before it reaches your repo.',
+    link: 'See the engineer’s CV',
+    url: 'https://cv.spacesonlabs.com',
+  },
+  talk: 'Talk any time: email, your team chat or a call, whichever suits you.',
   payment: 'Pay by Payoneer invoice (card or bank), SWIFT transfer, or USDT/USDC.',
 };
 
 export const PROMPTING = {
   title: 'Keep prompting? Yes, until people use it.',
-  lead: 'Lovable, Bolt and Cursor get you to a first version fast. The trouble starts later, once people use it.',
   quotes: [
     {
       text: 'The pain shows up when you add boring stuff: auth/rbac, db schema changes, background jobs, integrations, deploy/rollback.',
@@ -192,17 +206,17 @@ export const FAQ = [
   {
     question: 'I only have an idea, no app yet.',
     answer:
-      'Then we start from the idea. We agree the first version with you in writing, build your core flow first and show it working early. New products start from $2,000.',
+      'Then we start from the idea. We scope the first version with you, build your core flow first and show it working early. New products start from $2,000.',
   },
   {
     question: 'Do you build AI agents?',
     answer:
-      'Yes, one workflow at a time, with a written scope. The agent drafts; anything that sends money or goes to a customer waits for your OK. From $500 per workflow.',
+      'Yes, one workflow at a time, with a written scope. The agent drafts; anything that sends money or goes to a customer waits for your OK. Each workflow is priced on its own.',
   },
   {
     question: 'Who does the work, and when can we talk?',
     answer:
-      'A senior full-stack engineer who uses AI coding tools and reviews every line before it reaches your repo. Talk any time, by email, chat or a call, and we reply fast.',
+      'The senior engineer described under How we work, where the CV is linked. Write, message or call whenever suits you.',
   },
 ];
 
@@ -256,7 +270,7 @@ export const START = {
   checkLead: 'Have an app already? Run the free check',
   writeText:
     'Send the link to your app or a few lines about the idea, and what you want done. We reply fast with a plan and a price, or a straight no.',
-  talk: 'Talk any time.',
+  talk: 'Prefer a call? Say so in the email.',
 };
 
 // Shared by /for-ai-assistants and /llms.txt so the two never drift.

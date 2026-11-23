@@ -11,9 +11,10 @@ const SAMPLE_ROW_IDS = ['G4', 'G8', 'G5', 'G10'];
 
 const result = sampleCheck as CheckResult;
 const picked = SAMPLE_ROW_IDS.map((id) => result.checks.find((check) => check.id === id)).filter((check) => check !== undefined);
-// The commit count means nothing on a sample, so the card leaves it out.
+// Commit details mean nothing on a sample, so the card leaves them out.
 const sampleResult = {
   ...result,
+  commit: null,
   info: null,
   checks: [...picked, ...result.checks.filter((check) => !SAMPLE_ROW_IDS.includes(check.id))],
 };
@@ -21,8 +22,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 
 <Section id="check" title={OFFER.title} intro={`${OFFER.lead} ${OFFER.check.text}`} tone="panel">
-  <div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
-    <div class="grid content-start gap-8 lg:col-span-5">
+  <div class="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-12">
+    <div class="grid content-start gap-6 sm:gap-8 lg:col-span-5">
       <CheckField output="check-output" />
       <div>
         <h3 class="text-xl font-semibold">{OFFER.fix.name}</h3>
@@ -49,7 +50,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       </div>
     </figure>
   </div>
-  <div class="mt-10 lg:mt-16">
+  <div class="mt-8 lg:mt-16">
     <Prompting />
   </div>
 </Section>
