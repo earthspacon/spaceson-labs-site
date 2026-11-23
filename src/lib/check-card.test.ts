@@ -14,6 +14,14 @@ describe('renderCheckCard', () => {
     expect(html).toContain(`<strong>4 of 5</strong> ${FAILED_LABEL}`);
   });
 
+  it('says all checks pass when nothing needs work', () => {
+    const checks = live.checks.map((row) => ({ ...row, status: 'pass' as const }));
+    const html = renderCheckCard({ result: { ...live, checks, failed: 0 } });
+
+    expect(html).toContain('<p class="cc-score is-clear"><strong>All 5</strong> pass</p>');
+    expect(html).not.toContain(FAILED_LABEL);
+  });
+
   it('keeps the sample card free of anything that ages', () => {
     const html = renderCheckCard({
       result: {

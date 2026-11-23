@@ -130,7 +130,11 @@ export function renderCheckCard({
       <p class="cc-name">${escapeHtml(result.name)}</p>
       <p class="cc-meta">${meta}</p>
     </div>
-    <p class="cc-score"><strong>${result.failed} of ${result.total}</strong> ${FAILED_LABEL}</p>
+    ${
+      result.failed === 0
+        ? `<p class="cc-score is-clear"><strong>All ${result.total}</strong> pass</p>`
+        : `<p class="cc-score"><strong>${result.failed} of ${result.total}</strong> ${FAILED_LABEL}</p>`
+    }
     ${labels ? `<ul class="cc-labels">${labels}</ul>` : ''}
   </header>
   <ol class="cc-rows">${rows.map((row) => renderRow({ row })).join('')}</ol>

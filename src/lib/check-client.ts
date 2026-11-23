@@ -117,7 +117,7 @@ function renderResultFooter({ result }: { result: CheckResult }) {
   });
   const subject = `App check: ${result.name}`;
   const body = [
-    `${result.failed} of ${result.total} ${FAILED_LABEL}.`,
+    result.failed === 0 ? `All ${result.total} checks pass.` : `${result.failed} of ${result.total} ${FAILED_LABEL}.`,
     top ? `Top problem: ${top.title}${top.where ? ` (${top.where})` : ''}.` : '',
     `Full result: ${shareUrl}`,
   ]
@@ -126,7 +126,7 @@ function renderResultFooter({ result }: { result: CheckResult }) {
   const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   return `<div class="cc-footer">
-  <a class="btn btn-primary" href="${BASE}#start">Fix the top one with us ${icon('arrow')}</a>
+  <a class="btn btn-primary" href="${BASE}#start">${top ? 'Fix the top one with us' : 'Tell us the job'} ${icon('arrow')}</a>
   <a class="cc-footer-link" href="${mailto}">Email me this report</a>
   <a class="cc-footer-link" href="${shareUrl}">Link to this result</a>
 </div>`;

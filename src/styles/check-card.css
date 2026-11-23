@@ -47,6 +47,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.cc-score.is-clear strong {
+  color: var(--pass);
+}
+
 .cc-labels {
   grid-column: 1 / -1;
   display: flex;
