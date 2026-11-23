@@ -200,6 +200,49 @@ describe("GET /api/check", () => {
     expect(assets).toHaveBeenCalledTimes(1);
     vi.unstubAllGlobals();
   });
+
+  it("checks this site from its own pages, since a Worker cannot fetch its own domain", async () => {
+    const network = vi.fn(() => new Response("", { status: 522 }));
+    vi.stubGlobal("caches", { default: fakeCache() });
+    vi.stubGlobal("fetch", network);
+    const assets = vi.fn((request) => {
+      const { pathname } = new URL(request.url);
+      if (pathname === "/") {
+        return new Response("<html><head><title>Labs</title></head><body>hi</body></html>", { headers: { "content-type": "text/html" } });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    const env = { ASSETS: { fetch: assets } };
+
+    const response = await worker.fetch(new Request(`${SITE}/api/check?target=spacesonlabs.com`), env, { waitUntil: () => {} });
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result.mode).toBe("live");
+    expect(network.mock.calls.map(([input]) => String(input?.url ?? input)).filter((url) => url.includes("spacesonlabs.com"))).toEqual([]);
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("site traffic", () => {
+  it("sends http visitors to https with the same path", async () => {
+    const assets = vi.fn(() => new Response("page"));
+
+    const response = await worker.fetch(new Request("http://spacesonlabs.com/check/?t=a.com"), { ASSETS: { fetch: assets } }, {});
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get("location")).toBe("https://spacesonlabs.com/check/?t=a.com");
+    expect(assets).not.toHaveBeenCalled();
+  });
+
+  it("tells browsers to use https only", async () => {
+    const assets = vi.fn(() => new Response("page"));
+
+    const response = await worker.fetch(new Request(`${SITE}/`), { ASSETS: { fetch: assets } }, {});
+
+    expect(await response.text()).toBe("page");
+    expect(response.headers.get("strict-transport-security")).toBe("max-age=31536000");
+  });
 });
 
 async function check({

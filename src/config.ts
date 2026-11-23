@@ -23,7 +23,7 @@ export const HERO = {
   text: 'Fix a half-built app, build a new product, automate the busywork or add an engineer to your team. Any size. Price agreed in writing before we start.',
   primary: 'Tell us the job',
   secondary: 'Free app check',
-  anchor: { text: 'Jobs start at', price: '$150', team: 'Who does the work' },
+  anchor: { text: 'Jobs start at', price: '$150', team: 'Who we are' },
   workLabel: 'Our products, built and run by us',
 };
 
@@ -57,7 +57,7 @@ export const SERVICES: Service[] = [
   },
   {
     name: 'An engineer on your team',
-    text: 'A senior full-stack engineer in your repo, tracker and standups. Month to month.',
+    text: 'A senior full-stack engineer from the studio in your repo, tracker and standups. Month to month.',
     price: 'from $3,000/mo',
   },
   {
@@ -120,9 +120,9 @@ export const HOW = {
     },
   ],
   team: {
-    title: 'Who does the work',
-    text: 'A senior full-stack engineer who uses AI coding tools and reviews every line before it reaches your repo.',
-    link: 'See the engineer’s CV',
+    title: 'Who we are',
+    text: 'A small senior studio: product, design, engineering and automation under one roof. We work with AI tools where they save time, and a person reviews every line before it reaches your repo.',
+    link: 'Meet the founder',
     url: 'https://cv.spacesonlabs.com',
   },
   talk: 'Talk any time: email, your team chat or a call, whichever suits you.',
@@ -218,7 +218,7 @@ export const FAQ = [
   {
     question: 'Who does the work, and when can we talk?',
     answer:
-      'The senior engineer described under How we work, where the CV is linked. Write, message or call whenever suits you.',
+      'A senior team led by the studio’s founder; more under How we work. Write, message or call whenever suits you.',
   },
 ];
 

@@ -37,7 +37,7 @@ export const CHECK_ERRORS: Record<CheckErrorCode, { title: string; text: string 
   },
   not_found: {
     title: 'Nothing found at that address',
-    text: 'Check the spelling. If it is a site, make sure it is online; if it is a repo, make sure it exists.',
+    text: 'Check the spelling. If it is a site, make sure it is online. If it is a repo, it has to be public; for a private one, check the live site instead.',
   },
   private_repo: {
     title: 'That repo is private',
