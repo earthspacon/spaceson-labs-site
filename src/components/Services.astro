@@ -1,18 +1,38 @@
 ---
 import { SERVICES, SERVICES_NOTE } from '../config';
 import Section from './Section.astro';
+
+const splitPrice = (price: string) => {
+  const match = /^(from) (.+)$/.exec(price);
+
+  return match ? { prefix: match[1], amount: match[2] } : { prefix: '', amount: price };
+};
 ---
 
 <Section id="work" title="What we take on" intro={SERVICES_NOTE}>
   <ul class="border-t border-line">
     {
-      SERVICES.map((service) => (
-        <li class="grid gap-1 border-b border-line py-6 sm:grid-cols-12 sm:items-baseline sm:gap-8">
-          <h3 class="text-xl font-semibold tracking-tight sm:col-span-4">{service.name}</h3>
-          <p class="text-muted sm:col-span-5">{service.text}</p>
-          <p class="text-lg font-semibold sm:col-span-3 sm:text-right">{service.price}</p>
-        </li>
-      ))
+      SERVICES.map((service) => {
+        const { prefix, amount } = splitPrice(service.price);
+
+        return (
+          <li class="grid gap-2 border-b border-line py-7 sm:grid-cols-12 sm:items-baseline sm:gap-8">
+            <h3 class="text-h3 font-semibold sm:col-span-4">{service.name}</h3>
+            <p class="text-muted sm:col-span-5">{service.text}</p>
+            <p class="service-price sm:col-span-3 sm:text-right">
+              {prefix && <span class="text-sm text-muted">{prefix}</span>} <span class="text-h3 font-semibold">{amount}</span>
+            </p>
+          </li>
+        );
+      })
     }
   </ul>
 </Section>
+
+<style>
+  .service-price .text-h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
