@@ -7,8 +7,8 @@ type Props = {
   isEager?: boolean;
 };
 
-const SCREEN_WIDTH = 1200;
-const SCREEN_HEIGHT = 750;
+const SCREEN_WIDTH = 1040;
+const SCREEN_HEIGHT = 650;
 const THEMES = ['dark', 'light'] as const;
 
 const { product, sizes, isEager = false } = Astro.props;
@@ -27,7 +27,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         src={`${base}work/hero-${product.slug}-${theme}.webp`}
         srcset={`${base}work/hero-${product.slug}-${theme}.webp ${SCREEN_WIDTH}w, ${base}work/hero-${product.slug}-${theme}@2x.webp ${SCREEN_WIDTH * 2}w`}
         sizes={sizes}
-        alt={`${product.name} home page`}
+        alt={product.alt}
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT}
         loading={isEager ? 'eager' : 'lazy'}

@@ -11,8 +11,8 @@ export const SITE_DESCRIPTION =
   'We fix half-built apps, build new products, automate work and join your team as engineers. Free app check, prices from $500, agreed in writing before we start.';
 
 export const NAV_LINKS = [
-  { href: '#work', label: 'What we take on' },
   { href: '#products', label: 'Our products' },
+  { href: '#work', label: 'What we take on' },
   { href: '#how', label: 'How we work' },
   { href: '#check', label: 'Free app check' },
   { href: '#faq', label: 'Questions' },
@@ -213,17 +213,8 @@ export type Product = {
   job: string;
   url: string;
   host: string;
-  shot: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
-};
-
-export const PRODUCTS_SECTION = {
-  title: 'Apps we run ourselves',
-  intro: 'The screens above are live. We build, host and pay for these ourselves, on the same rules we use for client work.',
+  // Describes the hero frame, which shows the product block below the page title.
+  alt: string;
 };
 
 export const PRODUCTS: Product[] = [
@@ -234,12 +225,8 @@ export const PRODUCTS: Product[] = [
     job: 'Sorts contact-form messages: removes spam, scores real client requests and drafts a reply.',
     url: 'https://inboxsieve.com/',
     host: 'inboxsieve.com',
-    shot: {
-      src: 'work/inboxsieve.webp',
-      alt: 'InboxSieve: two spam messages removed, a sales pitch set aside, a real client request scored 87 with a drafted reply',
-      width: 976,
-      height: 768,
-    },
+    alt:
+      'InboxSieve on its live site: four contact-form messages before, and after it removed the spam, set a sales pitch aside and drafted a reply to the real client',
   },
   {
     name: 'PriceDawn',
@@ -248,12 +235,8 @@ export const PRODUCTS: Product[] = [
     job: "Checks competitors' prices every day and sends a store owner one morning email with every change.",
     url: 'https://pricedawn.spacesonlabs.com/',
     host: 'pricedawn.spacesonlabs.com',
-    shot: {
-      src: 'work/pricedawn.webp',
-      alt: 'PriceDawn morning email: a rival product dropped in price, with the old price, the new one and the link',
-      width: 944,
-      height: 540,
-    },
+    alt:
+      'PriceDawn on its live site: four rival prices checked by hand, next to the one morning email that lists the change and the link',
   },
   {
     name: 'MonthMemo',
@@ -262,12 +245,8 @@ export const PRODUCTS: Product[] = [
     job: "Drafts each agency client's monthly website report from their analytics, sent after the agency approves.",
     url: 'https://monthmemo.spacesonlabs.com/',
     host: 'monthmemo.spacesonlabs.com',
-    shot: {
-      src: 'work/monthmemo.webp',
-      alt: 'MonthMemo report email: sessions, search clicks and key events for the month, with a short written summary',
-      width: 968,
-      height: 688,
-    },
+    alt:
+      "MonthMemo on its live site: an agency's analytics spreadsheet next to the monthly report email the client receives",
   },
 ];
 
