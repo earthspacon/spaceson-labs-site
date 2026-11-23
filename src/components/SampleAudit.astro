@@ -61,7 +61,10 @@ const { summary, findings, pr } = audit;
               <span class="grid gap-0.5">
                 <span class:list={[finding.isFixed && 'line-through decoration-2 opacity-70']}>{finding.see}</span>
                 <span class="text-muted">
-                  <code class="break-all">{finding.where}</code>
+                  <code>
+                    {/* Long paths break after a slash, never mid-name. */}
+                    {finding.where.split('/').map((part, index, parts) => (index < parts.length - 1 ? <Fragment>{part}/<wbr /></Fragment> : part))}
+                  </code>
                 </span>
               </span>
               <span class:list={['sm:text-right', finding.isFixed ? 'font-semibold text-pass' : 'text-muted']}>
@@ -90,7 +93,7 @@ const { summary, findings, pr } = audit;
         <p class="border-b border-line bg-panel px-5 py-2 text-xs sm:px-6">
           <code>{pr.diffFile}</code>
         </p>
-        <pre class="overflow-x-auto px-5 py-3 text-[0.8rem] leading-relaxed sm:px-6"><code>{pr.diff.map((line) => (line === '…' ? <span class="block select-none text-muted">  …</span> : <span class="block"><span class="pr-add select-none">+ </span>{line}</span>))}</code></pre>
+        <pre class="px-5 py-3 text-[0.8rem] leading-relaxed break-words whitespace-pre-wrap sm:px-6"><code>{pr.diff.map((line) => (line === '…' ? <span class="block select-none text-muted">  …</span> : <span class="block pl-[2ch] -indent-[2ch]"><span class="pr-add select-none">+ </span>{line}</span>))}</code></pre>
       </div>
       <div class="p-5 sm:p-6">
         <p class="text-xs text-muted">

@@ -57,7 +57,7 @@
   --accent-ink: #ffffff;
   --fail: #c63737;
   --warn: #9a6400;
-  --pass: #1d8650;
+  --pass: #167045;
   --shadow: 0 24px 50px -28px rgb(16 19 26 / 0.35), 0 2px 6px rgb(16 19 26 / 0.08);
   color-scheme: light;
 }
@@ -73,6 +73,7 @@ html {
   h3 {
     font-family: var(--font-display);
     font-optical-sizing: auto;
+    text-wrap: balance;
   }
 }
 
