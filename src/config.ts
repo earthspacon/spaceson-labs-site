@@ -76,59 +76,18 @@ export const OFFER = {
   lead: 'A quick look before we talk.',
   check: {
     name: 'The check, free',
-    text: 'Paste your site or your GitHub repo. In seconds you see what breaks first once real users arrive, worst first, with the file and line. We never touch your database; we read only what is public.',
+    text: 'Paste your site or GitHub repo and see what breaks first once real users arrive, with the file and line.',
   },
   fix: {
     name: 'The fix, from $500',
     items: [
-      'A written audit of the whole app, ranked, in plain English, in your repo and as a PDF.',
-      'The worst problem fixed, with tests that prove it, as a pull request into your repo.',
-      'One price, in writing, for the rest. The audit and the fix are yours whether you go on or not.',
+      'A written audit of the whole app, ranked, in plain English.',
+      'The worst problem fixed, with tests, as a pull request into your repo.',
+      'One price for the rest. The audit and the fix are yours either way.',
     ],
   },
   cta: 'Start with the fix',
-  sampleCaption: 'Sample result on our own test app, with what passed and what needs work',
-};
-
-export const BREAKS = {
-  title: 'What breaks once real users arrive',
-  quote: '“$18K saved on development. $40K+ needed to fix what $18K bought me.”',
-  quoteSource: 'A founder on r/SaaS',
-  quoteUrl: 'https://www.reddit.com/r/SaaS/comments/1sd50dh/',
-  quoteAfter: 'The free check and the first fix are there so you find out early, while it is still cheap.',
-  footnote: 'Each of these is a check in the free tool.',
-  items: [
-    {
-      problem: 'Tables anyone can read',
-      text: 'The public key ships to every browser by design. Without row-level security it opens the whole table.',
-      fix: 'We add the rules and a test that proves a stranger gets nothing.',
-    },
-    {
-      problem: 'Bugs happen and nobody hears',
-      text: 'No error tracking, so you learn about a crash from a refund request.',
-      fix: 'Error alerts go to your email.',
-    },
-    {
-      problem: 'The payment code has no tests',
-      text: 'Checkout and webhooks change with every prompt and nothing checks them.',
-      fix: 'Tests on the payment path.',
-    },
-    {
-      problem: 'Nothing runs before deploy',
-      text: 'A broken change goes straight to users.',
-      fix: 'Tests run on every push.',
-    },
-    {
-      problem: 'A secret key in the browser',
-      text: 'One key that skips every database rule, downloaded by every visitor.',
-      fix: 'Moved to a server function, key rotated.',
-    },
-    {
-      problem: 'Files nobody can change safely',
-      text: 'One giant page holding half the app, where every edit breaks something.',
-      fix: 'Split where the audit says it pays off.',
-    },
-  ],
+  sampleCaption: 'Sample result, our test app',
 };
 
 export const HOW = {
@@ -158,7 +117,7 @@ export const HOW = {
 
 export const PROMPTING = {
   title: 'Keep prompting? Yes, until people use it.',
-  lead: 'Lovable, Bolt and Cursor are the fastest way to a first version, and we would tell you to keep going until people use it. People who ship with them say the trouble starts later.',
+  lead: 'Lovable, Bolt and Cursor get you to a first version fast. The trouble starts later, once people use it.',
   quotes: [
     {
       text: 'The pain shows up when you add boring stuff: auth/rbac, db schema changes, background jobs, integrations, deploy/rollback.',
@@ -166,32 +125,23 @@ export const PROMPTING = {
       url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op49uuz/',
     },
     {
-      text: 'Shipped two things to production with lovable. One survived, one didnt.',
-      source: 'r/nocode',
-      url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op4ov6n/',
-    },
-    {
       text: 'Great for getting to a working prototype… rough once it is live and has paying users.',
       source: 'r/nocode',
       url: 'https://www.reddit.com/r/nocode/comments/1ttnm22/comment/op5ba2s/',
     },
-    {
-      text: 'The generation was fast. The cleanup is a nightmare.',
-      source: 'r/vibecoding, a founder with users and revenue',
-      url: 'https://www.reddit.com/r/vibecoding/comments/1su03dk/',
-    },
   ],
   research:
-    'A security researcher found weak row-level security in 170 of 1,645 Lovable apps checked; anyone could read or change those databases. It was filed as CVE-2025-48757, which Lovable disputes.',
+    '170 of 1,645 Lovable apps checked had databases anyone could read or change (CVE-2025-48757, disputed by Lovable).',
   researchUrl: 'https://nvd.nist.gov/vuln/detail/CVE-2025-48757',
   close:
-    'That is where we come in: we read the code the way the next developer will, fix the worst problem, and add tests so the next prompt does not undo it. You can keep building features in your AI tool after we are done.',
+    'That is where we come in: we fix the worst problem and add tests so the next prompt does not undo it. You keep building in your AI tool after we are done.',
 };
 
 export const SAMPLE = {
   title: 'Read a sample audit before you pay for one',
   text: 'We built a small shift-scheduling app for a cleaning company, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
   run: 'Run the free check on it',
+  link: 'Read the full sample audit',
 };
 
 export const FAQ = [

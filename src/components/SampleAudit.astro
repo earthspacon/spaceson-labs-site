@@ -1,0 +1,122 @@
+---
+import { SAMPLE } from '../config';
+import audit from '../data/sample-audit.json';
+import sampleCheck from '../data/sample-check.json';
+import { icon } from '../lib/check-card';
+
+const SEVERITY_CLASS: Record<string, string> = {
+  critical: 'text-fail',
+  high: 'text-warn',
+  medium: 'text-muted',
+};
+
+const { summary, findings, pr } = audit;
+---
+
+<section id="sample" class="scroll-mt-16">
+  <div class="max-w-3xl">
+    <h2 class="text-h3 font-semibold text-balance">{SAMPLE.title}</h2>
+    <p class="mt-3 text-muted">{SAMPLE.text}</p>
+  </div>
+
+  <div class="mt-8 grid gap-6 lg:grid-cols-12">
+    <article class="sample-doc min-w-0 rounded-xl border border-line bg-raised shadow-[var(--shadow)] lg:col-span-7" aria-label="Sample audit report">
+      <header class="flex flex-wrap items-start justify-between gap-3 border-b border-line p-5 sm:p-6">
+        <div>
+          <p class="text-sm text-muted">Audit report, sample</p>
+          <h3 class="text-xl font-semibold">{audit.name}</h3>
+        </div>
+        <span class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">Our own app, faults planted on purpose</span>
+      </header>
+
+      <dl class="grid grid-cols-2 border-b border-line sm:grid-cols-4">
+        <div class="border-r border-line p-4 sm:p-5">
+          <dt class="text-sm text-muted">Findings</dt>
+          <dd class="text-2xl font-semibold">{summary.findings}</dd>
+        </div>
+        <div class="border-line p-4 sm:border-r sm:p-5">
+          <dt class="text-sm text-muted">Critical</dt>
+          <dd class="text-2xl font-semibold text-fail">{summary.critical}</dd>
+        </div>
+        <div class="border-t border-r border-line p-4 sm:border-t-0 sm:p-5">
+          <dt class="text-sm text-muted">High / medium</dt>
+          <dd class="text-2xl font-semibold">{summary.high} / {summary.medium}</dd>
+        </div>
+        <div class="border-t border-line p-4 sm:border-t-0 sm:p-5">
+          <dt class="text-sm text-muted">Rest of the job</dt>
+          <dd class="text-2xl font-semibold">{summary.estimate}</dd>
+        </div>
+      </dl>
+
+      <div class="border-b border-line p-5 sm:p-6">
+        <p class="text-sm font-semibold">Finding 1, critical</p>
+        <p class="mt-1 text-muted">{audit.firstFinding}</p>
+      </div>
+
+      <ol class="divide-y divide-line text-sm">
+        {
+          findings.map((finding) => (
+            <li class="grid gap-1 px-5 py-3 sm:grid-cols-[5.5rem_1fr_6.5rem] sm:gap-4 sm:px-6">
+              <span class:list={['font-semibold capitalize', SEVERITY_CLASS[finding.severity]]}>{finding.severity}</span>
+              <span class="grid gap-0.5">
+                <span class:list={[finding.isFixed && 'line-through decoration-2 opacity-70']}>{finding.see}</span>
+                <span class="text-muted">
+                  <code class="break-all">{finding.where}</code>
+                </span>
+              </span>
+              <span class:list={['sm:text-right', finding.isFixed ? 'font-semibold text-pass' : 'text-muted']}>
+                {finding.estimate}
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </article>
+
+    <article class="flex min-w-0 flex-col rounded-xl border border-line bg-raised shadow-[var(--shadow)] lg:col-span-5" aria-label="Sample pull request">
+      <header class="border-b border-line p-5 sm:p-6">
+        <p class="flex items-center gap-2 text-sm text-pass">
+          <Fragment set:html={icon('pr')} />Pull request #{pr.number}, ready to merge
+        </p>
+        <h3 class="mt-1 text-xl font-semibold">{pr.title}</h3>
+        <p class="mt-1 text-sm text-muted">
+          <span class="pr-add font-mono">+{pr.added}</span>
+          <span class="pr-del font-mono">−{pr.removed}</span> in {pr.files} files, fixes check {pr.fixesCheck}: {
+            sampleCheck.checks.find((check) => check.id === pr.fixesCheck)?.title.toLowerCase()
+          }
+        </p>
+      </header>
+      <div class="border-b border-line">
+        <p class="border-b border-line bg-panel px-5 py-2 text-xs sm:px-6">
+          <code>{pr.diffFile}</code>
+        </p>
+        <pre class="overflow-x-auto px-5 py-3 text-[0.8rem] leading-relaxed sm:px-6"><code>{pr.diff.map((line) => (line === '…' ? <span class="block select-none text-muted">  …</span> : <span class="block"><span class="pr-add select-none">+ </span>{line}</span>))}</code></pre>
+      </div>
+      <div class="p-5 sm:p-6">
+        <p class="text-xs text-muted">
+          <code>{pr.testFile}</code>
+        </p>
+        <ul class="mt-3 grid gap-1.5 text-sm">
+          {
+            pr.tests.map((test) => (
+              <li class="flex items-start gap-2">
+                <span class="mt-0.5 text-pass" set:html={icon('pass')} />
+                {test}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-4 rounded-lg bg-panel px-3 py-2 text-sm">
+          <span class="font-semibold text-pass">{pr.ci.passed} passed</span>, {pr.ci.failed} failed, in {pr.ci.seconds} s
+        </p>
+      </div>
+    </article>
+  </div>
+
+  <div class="mt-8 flex flex-wrap items-center gap-4">
+    <button type="button" class="btn btn-ghost" data-check-sample={sampleCheck.target}>
+      {SAMPLE.run}<Fragment set:html={icon('arrow')} />
+    </button>
+    <p class="text-sm text-muted">Both are samples from our own test app, so nothing here is a client’s code.</p>
+  </div>
+</section>

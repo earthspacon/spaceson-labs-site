@@ -2,6 +2,7 @@
 import CheckField from '../components/CheckField.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import SampleAudit from '../components/SampleAudit.astro';
 import { CONTACT_EMAIL, STUDIO_NAME } from '../config';
 import Base from '../layouts/Base.astro';
 
@@ -25,6 +26,9 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         Want it fixed? <a href={`${base}#start`} class="link">Tell us what you need</a> or write to
         <a href={`mailto:${CONTACT_EMAIL}`} class="link">{CONTACT_EMAIL}</a>.
       </p>
+    </div>
+    <div class="mx-auto mt-16 max-w-page border-t border-line pt-12 lg:mt-20">
+      <SampleAudit />
     </div>
   </main>
   <Footer />
