@@ -4,15 +4,17 @@ type Props = {
   title: string;
   intro?: string;
   tone?: 'paper' | 'panel';
+  heading?: 'h1' | 'h2';
 };
 
-const { id, title, intro, tone = 'paper' } = Astro.props;
+const { id, title, intro, tone = 'paper', heading = 'h2' } = Astro.props;
+const Heading = heading;
 ---
 
 <section id={id} class:list={['scroll-mt-16 border-t border-line px-5 py-16 sm:px-8 lg:py-24', tone === 'panel' && 'bg-panel']}>
   <div class="mx-auto max-w-page">
     <div class="grid gap-3 lg:grid-cols-12 lg:items-end lg:gap-10">
-      <h2 class="text-h2 font-semibold text-balance lg:col-span-7">{title}</h2>
+      <Heading class="text-h2 font-semibold text-balance lg:col-span-7">{title}</Heading>
       {intro && <p class="max-w-xl text-muted lg:col-span-5">{intro}</p>}
     </div>
     <div class="mt-10 lg:mt-14">

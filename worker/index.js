@@ -12,6 +12,7 @@ const BARE_HOSTS = {
 const OWN_HOSTS = new Set(["spacesonlabs.com", ...Object.keys(BARE_HOSTS)]);
 
 const HSTS = "max-age=31536000";
+const REFERRER_POLICY = "strict-origin-when-cross-origin";
 
 // Script and style hashes come from Astro in a meta tag; the header adds what a meta tag can't carry.
 const CSP = "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'";
@@ -69,6 +70,8 @@ function checkFetch(request, env) {
 function withHsts(response, { csp } = {}) {
   const headers = new Headers(response.headers);
   headers.set("strict-transport-security", HSTS);
+  headers.set("x-content-type-options", "nosniff");
+  headers.set("referrer-policy", REFERRER_POLICY);
   if (csp) {
     headers.set("content-security-policy", csp);
   }

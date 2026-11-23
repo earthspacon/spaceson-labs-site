@@ -243,6 +243,15 @@ describe("site traffic", () => {
     expect(await response.text()).toBe("page");
     expect(response.headers.get("strict-transport-security")).toBe("max-age=31536000");
   });
+
+  it("stops type sniffing and trims the referrer on pages", async () => {
+    const assets = vi.fn(() => new Response("page"));
+
+    const response = await worker.fetch(new Request(`${SITE}/`), { ASSETS: { fetch: assets } }, {});
+
+    expect(response.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(response.headers.get("referrer-policy")).toBe("strict-origin-when-cross-origin");
+  });
 });
 
 async function check({

@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../config';
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../config';
+import { OG_SIZE, OG_VERSION } from '../lib/og-card';
 
 type Props = { title?: string; description?: string; isNoindex?: boolean };
 
 const { title = SITE_TITLE, description = SITE_DESCRIPTION, isNoindex = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base}og.png`;
+const site = Astro.site ?? SITE_URL;
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(`${base}og.png?v=${OG_VERSION}`, site).href;
 ---
 
 <!doctype html>
@@ -16,6 +19,7 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     {isNoindex && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#10131a" />
@@ -49,11 +53,12 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32.png`} />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={String(OG_SIZE.width)} />
+    <meta property="og:image:height" content={String(OG_SIZE.height)} />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class="bg-paper font-sans text-ink antialiased">
