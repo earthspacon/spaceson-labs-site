@@ -72,7 +72,8 @@ export const SERVICES_NOTE =
   'These are starting points. Every price is agreed in writing before we start, and it goes lower or higher with the job.';
 
 export const OFFER = {
-  title: 'Start with a free check. Then we fix it.',
+  title: 'Free app check',
+  lead: 'A quick look before we talk.',
   check: {
     name: 'The check, free',
     text: 'Paste your site or your GitHub repo. In seconds you see what breaks first once real users arrive, worst first, with the file and line. We never touch your database; we read only what is public.',
@@ -86,8 +87,7 @@ export const OFFER = {
     ],
   },
   cta: 'Start with the fix',
-  sampleCaption: 'Live-site check on our sample app',
-  repoPrompt: 'Public repo? Check the code too: it shows tests, payments and database rules a site check cannot see.',
+  sampleCaption: 'Sample result on our own test app, with what passed and what needs work',
 };
 
 export const BREAKS = {
@@ -274,7 +274,7 @@ export type Product = {
 
 export const PRODUCTS_SECTION = {
   title: 'Apps we run ourselves',
-  intro: 'We build and run our own products on the same rules we use for yours.',
+  intro: 'The screens above are live. We build, host and pay for these ourselves, on the same rules we use for client work.',
 };
 
 export const PRODUCTS: Product[] = [

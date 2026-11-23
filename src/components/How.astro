@@ -3,7 +3,7 @@ import { HOW } from '../config';
 import Section from './Section.astro';
 ---
 
-<Section id="how" title={HOW.title} intro={HOW.intro} tone="panel">
+<Section id="how" title={HOW.title} intro={HOW.intro}>
   <ol class="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
     {
       HOW.steps.map((step) => (

@@ -69,6 +69,19 @@ export const ICONS = {
 // "failed" counts every row that is not a pass (fail + warn).
 export const FAILED_LABEL = 'need work';
 
+export type CheckTone = 'critical' | 'warn' | 'pass';
+
+// The one colour rule for findings: red only where data or keys are already exposed,
+// every other row that needs work is amber.
+export const CRITICAL_CHECK_IDS: ReadonlySet<string> = new Set(['G4', 'G5', 'G6', 'G7', 'U1', 'U4']);
+
+export function toneOf(row: Pick<CheckRow, 'id' | 'status'>): CheckTone {
+  if (row.status === 'pass') {
+    return 'pass';
+  }
+  return row.status === 'fail' && CRITICAL_CHECK_IDS.has(row.id) ? 'critical' : 'warn';
+}
+
 const STATUS_LABEL: Record<CheckStatus, string> = {
   fail: 'Fails',
   warn: 'Worth fixing',
@@ -157,7 +170,7 @@ function renderRow({ row, index }: { row: CheckRow; index: number }) {
   const fix = row.fix ? `<span class="cc-fix">fix: ${escapeHtml(row.fix)}</span>` : '';
   const tag = row.tag ? `<span class="cc-tag">${TAG_LABEL[row.tag]}</span>` : '';
 
-  return `<li class="cc-row is-${row.status}" style="--i:${index}">
+  return `<li class="cc-row is-${row.status} tone-${toneOf(row)}" style="--i:${index}">
   <details>
     <summary>
       <span class="cc-status" title="${STATUS_LABEL[row.status]}">${icon(row.status)}<span class="sr-only">${STATUS_LABEL[row.status]}:</span></span>

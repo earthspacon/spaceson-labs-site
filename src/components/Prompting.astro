@@ -3,7 +3,7 @@ import { PROMPTING } from '../config';
 import Section from './Section.astro';
 ---
 
-<Section id="prompting" title={PROMPTING.title} intro={PROMPTING.lead}>
+<Section id="prompting" title={PROMPTING.title} intro={PROMPTING.lead} tone="panel">
   <ul class="grid gap-5 md:grid-cols-2">
     {
       PROMPTING.quotes.map((quote) => (

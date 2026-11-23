@@ -43,7 +43,7 @@
   font-size: 1.35rem;
   line-height: 1.1;
   font-weight: 700;
-  color: var(--fail);
+  color: var(--warn);
   font-variant-numeric: tabular-nums;
 }
 
@@ -104,17 +104,18 @@
   stroke-width: 2.6;
 }
 
-.is-fail .cc-status {
+/* Colour follows the tone from toneOf() in check-card.ts, never the raw status. */
+.tone-critical .cc-status {
   color: var(--fail);
   background: color-mix(in oklab, var(--fail) 16%, transparent);
 }
 
-.is-warn .cc-status {
+.tone-warn .cc-status {
   color: var(--warn);
   background: color-mix(in oklab, var(--warn) 16%, transparent);
 }
 
-.is-pass .cc-status {
+.tone-pass .cc-status {
   color: var(--pass);
   background: color-mix(in oklab, var(--pass) 14%, transparent);
 }
@@ -289,54 +290,7 @@ details[open] > summary .cc-chevron {
   }
 }
 
-/* Pull request strip under the hero card: the first fail, fixed. */
-.pr-strip {
-  display: grid;
-  gap: 0.35rem;
-  margin-top: 0.75rem;
-  border: 1px solid color-mix(in oklab, var(--pass) 35%, var(--line));
-  border-radius: 0.75rem;
-  background: color-mix(in oklab, var(--pass) 6%, var(--raised));
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-}
-
-.pr-before {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--muted);
-}
-
-.pr-before s {
-  text-decoration-color: var(--fail);
-  text-decoration-thickness: 2px;
-}
-
-.pr-after {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.2rem 0.75rem;
-}
-
-.pr-after .ic {
-  color: var(--pass);
-}
-
-.pr-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-weight: 600;
-}
-
-.pr-stats {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
+/* Diff counts in the sample pull request. */
 .pr-add {
   color: var(--pass);
 }
@@ -345,10 +299,3 @@ details[open] > summary .cc-chevron {
   color: var(--fail);
 }
 
-.pr-tests {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  color: var(--pass);
-  font-weight: 560;
-}
