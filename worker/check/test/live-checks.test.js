@@ -105,6 +105,19 @@ describe('U2 crash reporting', () => {
 
     expect(row('U2').status).toBe('pass')
   })
+
+  it('passes when the page sends its own crash reports', async () => {
+    const html = '<html><head><script>addEventListener("unhandledrejection",e=>navigator.sendBeacon("/api/errors",e))</script><script type="module" src="/assets/index-abc.js"></script></head></html>'
+    const { row } = await checkSite(siteRoutes({ html }))
+
+    expect(row('U2').status).toBe('pass')
+  })
+
+  it('still warns when a page only beacons analytics', async () => {
+    const { row } = await checkSite(siteRoutes({ entry: 'navigator.sendBeacon("/stats","view")' }))
+
+    expect(row('U2').status).toBe('warn')
+  })
 })
 
 describe('U3 source maps', () => {

@@ -20,6 +20,24 @@ const ogImage = Astro.site ? new URL(`${base}og.png`, Astro.site).href : `${base
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#10131a" />
     <script is:inline>
+      (() => {
+        let sent = 0;
+        const send = (report) => {
+          if (sent >= 5) return;
+          sent += 1;
+          try {
+            navigator.sendBeacon('/api/errors', JSON.stringify({ ...report, page: location.pathname }));
+          } catch (error) {}
+        };
+        addEventListener('error', (event) => {
+          send({ message: String(event.message), source: event.filename, line: event.lineno, column: event.colno, stack: event.error?.stack });
+        });
+        addEventListener('unhandledrejection', (event) => {
+          send({ message: String(event.reason?.message ?? event.reason), stack: event.reason?.stack });
+        });
+      })();
+    </script>
+    <script is:inline>
       try {
         if (localStorage.theme === 'light') {
           document.documentElement.dataset.theme = 'light';

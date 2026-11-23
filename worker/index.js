@@ -1,5 +1,6 @@
 // Serves the static site and the free check, sends http to https and the www hosts to their bare domains.
 import { createRateLimiter, handleCheck, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS } from "./api-check.js";
+import { handleErrorReport, REPORT_LIMIT_MAX, REPORT_LIMIT_WINDOW_MS } from "./api-errors.js";
 
 const BARE_HOSTS = {
   "www.spacesonlabs.com": "spacesonlabs.com",
@@ -12,9 +13,17 @@ const OWN_HOSTS = new Set(["spacesonlabs.com", ...Object.keys(BARE_HOSTS)]);
 
 const HSTS = "max-age=31536000";
 
+// Script and style hashes come from Astro in a meta tag; the header adds what a meta tag can't carry.
+const CSP = "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'";
+
 const checkLimiter = createRateLimiter({
   max: RATE_LIMIT_MAX,
   windowMs: RATE_LIMIT_WINDOW_MS,
+});
+
+const errorLimiter = createRateLimiter({
+  max: REPORT_LIMIT_MAX,
+  windowMs: REPORT_LIMIT_WINDOW_MS,
 });
 
 export default {
@@ -32,6 +41,9 @@ export default {
         }),
       );
     }
+    if (url.pathname === "/api/errors" && url.protocol === "https:" && !BARE_HOSTS[url.hostname]) {
+      return withHsts(await handleErrorReport({ request, limiter: errorLimiter }));
+    }
     return serveSite(request, env);
   },
 };
@@ -44,7 +56,7 @@ async function serveSite(request, env) {
     url.hostname = bareHost ?? url.hostname;
     return Response.redirect(url.toString(), 301);
   }
-  return withHsts(await env.ASSETS.fetch(request));
+  return withHsts(await env.ASSETS.fetch(request), { csp: CSP });
 }
 
 function checkFetch(request, env) {
@@ -54,8 +66,11 @@ function checkFetch(request, env) {
   return fetch(request);
 }
 
-function withHsts(response) {
+function withHsts(response, { csp } = {}) {
   const headers = new Headers(response.headers);
   headers.set("strict-transport-security", HSTS);
+  if (csp) {
+    headers.set("content-security-policy", csp);
+  }
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }

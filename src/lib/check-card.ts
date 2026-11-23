@@ -133,7 +133,7 @@ export function renderCheckCard({
     <p class="cc-score"><strong>${result.failed} of ${result.total}</strong> ${FAILED_LABEL}</p>
     ${labels ? `<ul class="cc-labels">${labels}</ul>` : ''}
   </header>
-  <ol class="cc-rows">${rows.map((row, index) => renderRow({ row, index })).join('')}</ol>
+  <ol class="cc-rows">${rows.map((row) => renderRow({ row })).join('')}</ol>
   ${hidden > 0 ? `<p class="cc-more">${hidden} more checks in the full result</p>` : ''}
   ${result.info ? `<p class="cc-info">${renderInfo({ info: result.info, isSample })}</p>` : ''}
 </article>`;
@@ -165,12 +165,12 @@ export function renderWhere(where: string) {
   return `${html}${escapeHtml(rest)}`;
 }
 
-function renderRow({ row, index }: { row: CheckRow; index: number }) {
+function renderRow({ row }: { row: CheckRow }) {
   const where = row.where ? `<code class="cc-where">${renderWhere(row.where)}</code>` : '';
   const fix = row.fix ? `<span class="cc-fix">fix: ${escapeHtml(row.fix)}</span>` : '';
   const tag = row.tag ? `<span class="cc-tag">${TAG_LABEL[row.tag]}</span>` : '';
 
-  return `<li class="cc-row is-${row.status} tone-${toneOf(row)}" style="--i:${index}">
+  return `<li class="cc-row is-${row.status} tone-${toneOf(row)}">
   <details>
     <summary>
       <span class="cc-status" title="${STATUS_LABEL[row.status]}">${icon(row.status)}<span class="sr-only">${STATUS_LABEL[row.status]}:</span></span>

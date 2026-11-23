@@ -12,6 +12,8 @@ const SCRIPT_CONCURRENCY = 2
 const MAX_REDIRECTS = 4
 const MAX_MAP_PROBES = 10
 const UNCHECKED_WHY = 'Part of the site did not answer or was too big to read within the limits of the free check. Run it again in a minute.'
+// A page that catches unhandled promise errors and beacons them out runs its own crash reporting.
+const SELF_HOSTED_REPORTER = [/['"]unhandledrejection['"]/, /sendBeacon\(/]
 const ERROR_TRACKER_MARKERS = /ingest\.(?:[a-z]{2}\.)?sentry\.io|sentry\.javascript|__SENTRY__|bugsnag|logrocket|posthog|highlight\.run|datadoghq-browser|rollbar/i
 const BUILDER_LABELS = [
   {
@@ -337,7 +339,7 @@ function checkExposedFiles({ exposedFiles }) {
 }
 
 function checkErrorTracking({ allText, hasAllText }) {
-  if (ERROR_TRACKER_MARKERS.test(allText)) {
+  if (ERROR_TRACKER_MARKERS.test(allText) || SELF_HOSTED_REPORTER.every((marker) => marker.test(allText))) {
     return {
       id: 'U2',
       status: 'pass',

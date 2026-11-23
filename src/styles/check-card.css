@@ -258,6 +258,30 @@ details[open] > summary .cc-chevron {
 }
 
 /* The one authored moment: hero rows tick from pending to their result once, on load. */
+.cc-animated .cc-row:nth-child(1) {
+  --i: 0;
+}
+
+.cc-animated .cc-row:nth-child(2) {
+  --i: 1;
+}
+
+.cc-animated .cc-row:nth-child(3) {
+  --i: 2;
+}
+
+.cc-animated .cc-row:nth-child(4) {
+  --i: 3;
+}
+
+.cc-animated .cc-row:nth-child(5) {
+  --i: 4;
+}
+
+.cc-animated .cc-row:nth-child(6) {
+  --i: 5;
+}
+
 .cc-animated .cc-row .cc-status {
   animation: cc-tick 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(250ms + var(--i) * 320ms);
