@@ -55,6 +55,7 @@ function wireForm(form: HTMLFormElement) {
     return;
   }
   const defaultHint = hint?.textContent ?? '';
+  fitPlaceholder(input);
 
   input.addEventListener('input', () => {
     const detected = detectTarget(input.value);
@@ -84,7 +85,10 @@ async function fetchResult({ target }: { target: string }) {
     const response = await fetch(`${CHECK_API}?target=${encodeURIComponent(target)}`);
     const body = await response.json();
     if (!response.ok || body.error) {
-      return renderCheckError({ code: toErrorCode(body.error) });
+      return renderCheckError({
+        code: toErrorCode(body.error),
+        message: typeof body.message === 'string' ? body.message : undefined,
+      });
     }
     return renderCheckCard({ result: body as CheckResult }) + renderResultFooter({ result: body as CheckResult });
   } catch {
@@ -97,6 +101,21 @@ function toErrorCode(code: unknown): CheckErrorCode {
     return code as CheckErrorCode;
   }
   return 'upstream';
+}
+
+// The full placeholder is cut off on a phone, so narrow screens get the short one.
+function fitPlaceholder(input: HTMLInputElement) {
+  const full = input.placeholder;
+  const short = input.dataset.placeholderShort;
+  if (!short) {
+    return;
+  }
+  const narrow = window.matchMedia('(max-width: 639px)');
+  const apply = () => {
+    input.placeholder = narrow.matches ? short : full;
+  };
+  apply();
+  narrow.addEventListener('change', apply);
 }
 
 function renderLoading({ target }: { target: string }) {

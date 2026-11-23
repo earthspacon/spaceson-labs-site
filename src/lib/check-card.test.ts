@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import sampleCheck from '../data/sample-check.json';
 import sampleLive from '../data/sample-check-live.json';
-import { type CheckResult, detectTarget, FAILED_LABEL, renderCheckCard, renderWhere } from './check-card';
+import { type CheckResult, CHECK_ERRORS, detectTarget, FAILED_LABEL, renderCheckCard, renderCheckError, renderWhere } from './check-card';
 
 const repo = sampleCheck as CheckResult;
 const live = sampleLive as CheckResult;
@@ -79,6 +79,37 @@ describe('renderWhere', () => {
     expect(renderWhere('assets/index-BdKGPZwx.js (service_role)')).toBe(
       '<span class="cc-file">assets/</span><wbr><span class="cc-file">index-BdKGPZwx.js</span> (service_role)',
     );
+  });
+});
+
+describe('renderCheckError', () => {
+  it('shows the server message escaped', () => {
+    const html = renderCheckError({ code: 'upstream', message: 'x<y' });
+
+    expect(html).toContain('x&lt;y');
+    expect(html).not.toContain('x<y');
+  });
+
+  it('falls back to the page copy without a server message', () => {
+    expect(renderCheckError({ code: 'rate_limited' })).toContain(CHECK_ERRORS.rate_limited.text);
+    expect(CHECK_ERRORS.rate_limited.text).toMatch(/^Wait ten minutes and try again/);
+  });
+});
+
+describe('renderCheckCard info line', () => {
+  it('leaves out the last commit when its date is unknown', () => {
+    const html = renderCheckCard({
+      result: {
+        ...repo,
+        info: {
+          authors: 2,
+          lastCommitDays: null,
+        },
+      },
+    });
+
+    expect(html).toContain('2 people commit here</p>');
+    expect(html).not.toMatch(/last commit|null/);
   });
 });
 

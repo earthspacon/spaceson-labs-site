@@ -93,8 +93,10 @@
     "diffFile": "supabase/migrations/0004_lock_down_clients.sql",
     "diff": [
       "alter table clients enable row level security;",
+      "…",
       "create policy \"own company reads clients\" on clients",
       "  for select to authenticated using (company_id = auth_company_id());",
+      "…",
       "create policy \"owner removes clients\" on clients",
       "  for delete to authenticated using (company_id = auth_company_id() and auth_is_owner());"
     ],

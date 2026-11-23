@@ -28,6 +28,7 @@ export const HERO = {
 
 export const CHECK_FIELD = {
   placeholder: 'your-app.com or github.com/you/your-app',
+  placeholderShort: 'your-app.com or GitHub repo',
   button: 'Check it free',
   hint: 'No signup. We only read what is public.',
 };
@@ -188,7 +189,7 @@ export const PROMPTING = {
 
 export const SAMPLE = {
   title: 'Read a sample audit before you pay for one',
-  text: 'We built a small shift-scheduling app for a cleaning company in Lovable, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
+  text: 'We built a small shift-scheduling app for a cleaning company, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
   run: 'Run the free check on it',
 };
 

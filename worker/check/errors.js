@@ -11,7 +11,7 @@ const ERROR_MESSAGES = {
   bad_target: 'Paste a public GitHub repo (github.com/you/your-app) or your app address (https://your-app.com).',
   not_found: 'We could not find that. Check the address and try again.',
   private_repo: 'This repo is private. We only read public code. Paste your app address instead.',
-  rate_limited: 'Too many checks right now. Try again in a few minutes.',
+  rate_limited: 'Too many checks from your network. Wait ten minutes and try again.',
   timeout: 'The check took longer than we allow. Try again in a minute.',
   upstream: 'A service we rely on did not answer. Try again in a minute.',
 }

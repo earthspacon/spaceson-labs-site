@@ -22,7 +22,7 @@ export type CheckResult = {
   failed: number;
   total: number;
   labels: string[];
-  info: { authors: number; lastCommitDays: number } | null;
+  info: { authors: number; lastCommitDays: number | null } | null;
   checks: CheckRow[];
 };
 
@@ -45,7 +45,7 @@ export const CHECK_ERRORS: Record<CheckErrorCode, { title: string; text: string 
   },
   rate_limited: {
     title: 'Too many checks from your network',
-    text: 'Wait an hour and try again, or email us the link and we will run it for you.',
+    text: 'Wait ten minutes and try again, or email us the link and we will run it for you.',
   },
   timeout: {
     title: 'The check took too long, so we stopped it',
@@ -126,11 +126,13 @@ export function renderCheckCard({
 </article>`;
 }
 
-export function renderCheckError({ code }: { code: CheckErrorCode }) {
+// `message` comes from the server and says what went wrong in this case; it is always escaped.
+export function renderCheckError({ code, message }: { code: CheckErrorCode; message?: string }) {
   const error = CHECK_ERRORS[code] ?? CHECK_ERRORS.upstream;
+  const text = message ? escapeHtml(message) : error.text;
   return `<div class="cc cc-error" role="alert" data-error="${code}">
   <p class="cc-error-title">${icon('warn')}${error.title}</p>
-  <p class="cc-error-text">${error.text}</p>
+  <p class="cc-error-text">${text}</p>
 </div>`;
 }
 
@@ -179,7 +181,7 @@ function buildDuration({ ms, isSample }: { ms: number; isSample: boolean }) {
 
 function renderInfo({ info, isSample }: { info: NonNullable<CheckResult['info']>; isSample: boolean }) {
   const authors = info.authors === 1 ? '1 person commits here' : `${info.authors} people commit here`;
-  if (isSample) {
+  if (isSample || info.lastCommitDays === null) {
     return authors;
   }
   return `${authors}, last commit ${buildDaysAgo(info.lastCommitDays)}`;
@@ -195,8 +197,16 @@ function buildDaysAgo(days: number) {
   return `${days} days ago`;
 }
 
+const HTML_ENTITIES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (char) => {
-    return `&#${char.charCodeAt(0)};`;
+    return HTML_ENTITIES[char];
   });
 }

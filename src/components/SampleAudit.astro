@@ -78,7 +78,7 @@ const { summary, findings, pr } = audit;
         <p class="mt-1 text-sm text-muted">
           <span class="pr-add font-mono">+{pr.added}</span>
           <span class="pr-del font-mono">−{pr.removed}</span> in {pr.files} files, fixes check {pr.fixesCheck}: {
-            sampleCheck.checks[0].title.toLowerCase()
+            sampleCheck.checks.find((check) => check.id === pr.fixesCheck)?.title.toLowerCase()
           }
         </p>
       </header>
@@ -86,7 +86,7 @@ const { summary, findings, pr } = audit;
         <p class="border-b border-line bg-panel px-5 py-2 text-xs sm:px-6">
           <code>{pr.diffFile}</code>
         </p>
-        <pre class="overflow-x-auto px-5 py-3 text-[0.8rem] leading-relaxed sm:px-6"><code>{pr.diff.map((line) => <span class="block"><span class="pr-add select-none">+ </span>{line}</span>)}</code></pre>
+        <pre class="overflow-x-auto px-5 py-3 text-[0.8rem] leading-relaxed sm:px-6"><code>{pr.diff.map((line) => (line === '…' ? <span class="block select-none text-muted">  …</span> : <span class="block"><span class="pr-add select-none">+ </span>{line}</span>))}</code></pre>
       </div>
       <div class="p-5 sm:p-6">
         <p class="text-xs text-muted">
