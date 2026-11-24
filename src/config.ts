@@ -154,8 +154,6 @@ export const SAMPLE = {
   title: 'Read a sample audit before you pay for one',
   text: 'We built a small shift-scheduling app for a cleaning company, left nine common faults in it on purpose, then audited and fixed it the way we would yours. The report and the pull request below are rendered from that work.',
   run: 'Run the free check on it',
-  // Turn on once github.com/spacesonlabs/shiftboard-sample is public.
-  isRunnable: false,
   link: 'Read the full sample audit',
 };
 

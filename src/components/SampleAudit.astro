@@ -117,14 +117,10 @@ const { summary, findings, pr } = audit;
   </div>
 
   <div class="mt-8 flex flex-wrap items-center gap-4">
-    {
-      SAMPLE.isRunnable && (
-        <button type="button" class="btn btn-ghost" data-check-sample={sampleCheck.target}>
-          {SAMPLE.run}
-          <Fragment set:html={icon('arrow')} />
-        </button>
-      )
-    }
+    <button type="button" class="btn btn-ghost" data-check-sample={sampleCheck.target}>
+      {SAMPLE.run}
+      <Fragment set:html={icon('arrow')} />
+    </button>
     <p class="text-sm text-muted">Both are samples from our own test app, so nothing here is a client’s code.</p>
   </div>
 </section>
