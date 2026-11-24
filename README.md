@@ -1,12 +1,18 @@
 # Spaceson Labs site
 
-One-page site for Spaceson Labs, an AI-native product studio that ships AI agents, automations and MVPs for US/UK/EU startups and SMBs. Static Astro + Tailwind, no client-side JavaScript.
+The site of Spaceson Labs, a small product studio, live at [spacesonlabs.com](https://spacesonlabs.com). Astro + Tailwind pages with almost no client-side JavaScript, served by a Cloudflare Worker that also runs the free app check: paste a GitHub repo or a live URL and it reports tables without row rules, secret keys in browser code, exposed settings files, missing safety headers and similar problems a user could hit.
 
 | Desktop | Mobile |
 |---|---|
 | ![Desktop](docs/screenshot-desktop.png) | ![Mobile](docs/screenshot-mobile.png) |
 
-All copy (packages, prices, FAQ, payment methods, demos) lives in `src/config.ts`. Before going live, replace `CONTACT_EMAIL` there with the real address.
+## Layout
+
+| Path | What |
+|---|---|
+| `src/` | Astro pages and components. All copy (services, prices, FAQ, product cards) lives in `src/config.ts` |
+| `worker/index.js` | The Worker: static assets, https and www redirects, security headers, `/api/check` and the browser error endpoint |
+| `worker/check/` | The free check: repo checks (secrets, SQL row rules, packages, settings) and live checks, with an outbound fetch guard and a subrequest budget |
 
 ## Run
 
@@ -14,49 +20,15 @@ All copy (packages, prices, FAQ, payment methods, demos) lives in `src/config.ts
 pnpm install
 pnpm dev       # http://localhost:4321
 pnpm build     # static site in dist/
-pnpm preview   # serve dist/
+pnpm test      # vitest: the worker, the check and the share card
 ```
 
-`SITE_BASE` sets the path the site lives under (default `/`), `SITE_URL` the full origin used for the OG image URL:
+`SITE_URL` sets the origin used for the canonical and OG image URLs, `SITE_BASE` the path the site lives under (default `/`).
 
-```bash
-SITE_URL=https://<user>.github.io SITE_BASE=/<repo>/ pnpm build
-```
+## Deploy
 
-## Deploy to GitHub Pages
+`SITE_URL=https://spacesonlabs.com pnpm build && npx wrangler deploy`. The routes and the rate limit binding are in `wrangler.jsonc`.
 
-1. Push this repo to GitHub.
-2. Settings → Pages → Source: **GitHub Actions**.
-3. Add `.github/workflows/deploy.yml`:
+## License
 
-   ```yaml
-   name: Deploy
-   on:
-     push:
-       branches: [main]
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v4
-         - uses: withastro/action@v3
-           env:
-             SITE_URL: https://${{ github.repository_owner }}.github.io
-             SITE_BASE: /${{ github.event.repository.name }}/
-     deploy:
-       needs: build
-       runs-on: ubuntu-latest
-       environment:
-         name: github-pages
-         url: ${{ steps.deployment.outputs.page_url }}
-       steps:
-         - id: deployment
-           uses: actions/deploy-pages@v4
-   ```
-
-4. Push to `main`; the site appears at `https://<user>.github.io/<repo>/`.
-5. Custom domain: add it under Settings → Pages, point a CNAME to `<user>.github.io`, and build with `SITE_URL=https://<domain>` and `SITE_BASE=/`.
+MIT, see [LICENSE](LICENSE).
