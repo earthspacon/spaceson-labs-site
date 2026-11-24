@@ -29,8 +29,8 @@ export async function handleCheck({ request, env, ctx, cache, fetch, limiter }) 
   if (cached) {
     return cached;
   }
-  const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
-  if (!limiter.allow(toLimitKey(ip))) {
+  const limitKey = toLimitKey(request.headers.get("CF-Connecting-IP") ?? "unknown");
+  if (!limiter.allow(limitKey) || !(await allowShared(env.CHECK_RATE_LIMIT, limitKey))) {
     return errorResponse(toErrorResult(new CheckError("rate_limited")));
   }
   const result = await runCheck(parsed.target, {
@@ -85,6 +85,15 @@ export function createRateLimiter({ max, windowMs, now = Date.now }) {
       return true;
     },
   };
+}
+
+// The Cloudflare binding counts across isolates in one location; local dev runs without it.
+async function allowShared(binding, key) {
+  if (!binding) {
+    return true;
+  }
+  const { success } = await binding.limit({ key });
+  return success;
 }
 
 function errorResponse(result) {

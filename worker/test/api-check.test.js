@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CHECK_TIMEOUT_MS, createRateLimiter, handleCheck, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS, toLimitKey } from "../api-check.js";
 import worker from "../index.js";
@@ -141,6 +142,46 @@ describe("GET /api/check", () => {
 
     expect(statuses[10]).toBe(429);
     expect(otherNetwork.response.status).toBe(404);
+  });
+
+  it("stops a burst spread over isolates with the shared Cloudflare limit", async () => {
+    const keys = [];
+    const shared = { limit: vi.fn(async ({ key }) => (keys.push(key), { success: false })) };
+    const { response, body, fetch } = await check({
+      env: { GITHUB_TOKEN: TOKEN, CHECK_RATE_LIMIT: shared },
+      ip: "2001:db8:a:b::9",
+    });
+
+    expect(response.status).toBe(429);
+    expect(body.error).toBe("rate_limited");
+    expect(keys).toEqual(["2001:db8:a:b::/64"]);
+    expect(fetch.calls).toEqual([]);
+  });
+
+  it("runs the check when the shared limit allows it", async () => {
+    const shared = { limit: vi.fn(async () => ({ success: true })) };
+    const { response } = await check({ env: { GITHUB_TOKEN: TOKEN, CHECK_RATE_LIMIT: shared } });
+
+    expect(response.status).toBe(200);
+    expect(shared.limit).toHaveBeenCalledTimes(1);
+  });
+
+  it("answers from the cache without spending the shared limit", async () => {
+    const shared = { limit: vi.fn(async () => ({ success: true })) };
+    const cache = fakeCache();
+    const env = { GITHUB_TOKEN: TOKEN, CHECK_RATE_LIMIT: shared };
+    await check({ env, cache });
+    await check({ env, cache });
+
+    expect(shared.limit).toHaveBeenCalledTimes(1);
+  });
+
+  it("binds the shared limit in the Worker config", () => {
+    const config = JSON.parse(readFileSync(new URL("../../wrangler.jsonc", import.meta.url), "utf8"));
+
+    expect(config.ratelimits).toEqual([
+      { name: "CHECK_RATE_LIMIT", namespace_id: "1010", simple: { limit: 5, period: 60 } },
+    ]);
   });
 
   it.each([
