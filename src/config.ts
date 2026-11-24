@@ -58,7 +58,7 @@ export const SERVICES: Service[] = [
   {
     name: 'An engineer on your team',
     text: 'A senior full-stack engineer from the studio in your repo, tracker and standups. Month to month.',
-    price: 'from $3,000/mo',
+    price: 'from $5,000/mo',
   },
   {
     name: 'Anything else',
