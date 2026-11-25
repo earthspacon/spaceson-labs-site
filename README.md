@@ -11,7 +11,9 @@ The site of Spaceson Labs, a small product studio, live at [spacesonlabs.com](ht
 | Path | What |
 |---|---|
 | `src/` | Astro pages and components. All copy (services, prices, FAQ, product cards) lives in `src/config.ts` |
-| `worker/index.js` | The Worker: static assets, https and www redirects, security headers, `/api/check` and the browser error endpoint |
+| `worker/index.js` | The Worker: `/api/check` and the browser error endpoint. Pages are served as static assets and never wake it |
+| `public/_headers` | Security headers for the static pages |
+| `www-redirect/` | A tiny Worker that sends `www.` hosts to the bare domain |
 | `worker/check/` | The free check: repo checks (secrets, SQL row rules, packages, settings) and live checks, with an outbound fetch guard and a subrequest budget |
 
 ## Run
@@ -27,7 +29,7 @@ pnpm test      # vitest: the worker, the check and the share card
 
 ## Deploy
 
-`SITE_URL=https://spacesonlabs.com pnpm build && npx wrangler deploy`. The routes and the rate limit binding are in `wrangler.jsonc`.
+`SITE_URL=https://spacesonlabs.com pnpm build && npx wrangler deploy`, then `npx wrangler deploy -c www-redirect/wrangler.jsonc`. The routes and the rate limit binding are in `wrangler.jsonc`.
 
 ## License
 

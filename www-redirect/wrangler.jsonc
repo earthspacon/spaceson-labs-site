@@ -1,0 +1,11 @@
+{
+  "name": "spaceson-www-redirect",
+  "main": "index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "www.spacesonlabs.com", "custom_domain": true },
+    { "pattern": "www.inboxsieve.com", "custom_domain": true }
+  ]
+}
